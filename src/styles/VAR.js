@@ -1,13 +1,14 @@
 
 
 const helper = {
-    primaryBackgroundColor: '#2E81FF',
+    primaryBackgroundColor: '#ECF3FF',
     secondaryBackgroundColor: '#C2DBFF',
     inputBackgroundColor: '#FDFDFD',
     darkBlue: '#6085BD',
     outlineDefaultColor: '#DBDBDB',
     primaryTextColor: '#0D6EFF',
     secondaryTextColor: '#959595',
+    dangerText: '#DA7272',
     white: '#FFFFFF',
     blackColor: '#000000',
     mediumFontSize: 24,
