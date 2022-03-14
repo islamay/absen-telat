@@ -3,6 +3,7 @@
 const helper = {
     primaryBackgroundColor: '#ECF3FF',
     secondaryBackgroundColor: '#C2DBFF',
+    buttonPrimary: '#0D6EFF',
     inputBackgroundColor: '#FDFDFD',
     darkBlue: '#6085BD',
     outlineDefaultColor: '#DBDBDB',

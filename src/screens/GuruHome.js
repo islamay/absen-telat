@@ -4,7 +4,6 @@ import AbsenChoiceButton from '../components/AbsenChoiceButton'
 import absenChoiceEnum from '../helpers/absenChoiceEnum'
 import styles from '../styles/GuruHome'
 
-
 const Home = ({navigation}) => {
 
     return (
@@ -14,6 +13,7 @@ const Home = ({navigation}) => {
                 <AbsenChoiceButton method={absenChoiceEnum.SCAN} navigation={navigation} />
                 <AbsenChoiceButton method={absenChoiceEnum.MANUAL} navigation={navigation}/>
             </View>
+            <Text onPress={() => {navigation.navigate('Test')}}>Test</Text>
         </View>
     )
 }

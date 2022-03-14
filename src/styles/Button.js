@@ -3,7 +3,7 @@ import VAR from './VAR'
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: VAR.primaryBackgroundColor,
+        backgroundColor: VAR.buttonPrimary,
         paddingVertical: 5,
         borderRadius: 5
     },

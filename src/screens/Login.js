@@ -45,7 +45,9 @@ const Login = ({navigation}) => {
         
         if (role === roleEnum.guru) {
             try {
+                console.log('Fetching To Backend...');
                 await signInGuru({email: email, password: password})
+
             } catch (error) {
                 console.log('error');
                 createLoginErrorAlert('Login Gagal', error.message)

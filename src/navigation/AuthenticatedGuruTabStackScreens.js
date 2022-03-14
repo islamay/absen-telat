@@ -7,6 +7,7 @@ import {Ionicons, FontAwesome5} from '@expo/vector-icons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import VAR from '../styles/VAR'
+import Test from '../screens/Test'
 
 const GuruHomeStack = createNativeStackNavigator()
 const GuruHomeStackScreens = () => {
@@ -38,6 +39,10 @@ const GuruHomeStackScreens = () => {
                 name='AbsenWithScan'
                 component={AbsenWithScan}
                 options={{title: 'Absen'}}
+            />
+            <GuruHomeStack.Screen
+                name='Test'
+                component={Test}
             />
         </GuruHomeStack.Navigator>
     )
