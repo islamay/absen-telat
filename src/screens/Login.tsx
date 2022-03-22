@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { View, Alert } from 'react-native'
 import WithStatusBarMargin from '../components/WithStatusBarMargin'
 import Title from '../components/Title'
@@ -7,19 +7,20 @@ import Input from '../components/Input'
 import Button from '../components/Button'
 import SemiSlashThrough from '../components/SemiSlashThrough'
 import CustomPicker from '../components/CustomPicker'
-import {Picker} from '@react-native-picker/picker'
+import { Picker } from '@react-native-picker/picker'
 import CustomLink from '../components/CustomLink'
 import FormSecondaryCard from '../components/FormSecondaryCard'
-import {roleEnum} from './Signup'
-import AuthContext from '../hooks/AuthContext'
+import { roleEnum } from './Signup'
 import styles from '../styles/Login'
+import { NavigationAction } from '@react-navigation/native'
+import { useDispatch } from 'react-redux'
+import auth from '../store/auth'
 
-
-const Login = ({navigation}) => {
+const Login: React.FC = ({ navigation }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [role, setRole] = useState(roleEnum.siswa)
-    const {signInGuru} = useContext(AuthContext)
+    const dispatch = useDispatch()
 
     const onUserIdentifierChange = (value) => {
         setEmail(value)
@@ -42,15 +43,21 @@ const Login = ({navigation}) => {
     }
 
     const onLoginButtonPressed = async () => {
-        
+
         if (role === roleEnum.guru) {
             try {
-                console.log('Fetching To Backend...');
-                await signInGuru({email: email, password: password})
-
+                console.log('Login Guru');
+                dispatch(auth.actions.signIn())
             } catch (error) {
                 console.log('error');
-                createLoginErrorAlert('Login Gagal', error.message)
+            }
+        }
+
+        if (role === roleEnum.siswa) {
+            try {
+                console.log('Login Siswa');
+            } catch (error) {
+                console.log(error);
             }
         }
     }
@@ -73,7 +80,7 @@ const Login = ({navigation}) => {
                         placeholder={'Password'}
                         onChangeText={onPasswordChange}
                     />
-                    <Button text={'Masuk'} onPress={onLoginButtonPressed} style={styles.loginBtn}/>
+                    <Button text={'Masuk'} onPress={onLoginButtonPressed} style={styles.loginBtn} />
                     <SemiSlashThrough style={styles.atau} text={'ATAU'} />
                     <CustomLink text={'Lupa kata sandi?'} />
                 </Card>

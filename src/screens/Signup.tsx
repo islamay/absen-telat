@@ -12,7 +12,6 @@ import CustomPicker from '../components/CustomPicker'
 import {Picker} from '@react-native-picker/picker'
 import { GuruSignupInterface } from '../classes/guru'
 import { SiswaSignupInterface } from '../classes/siswa'
-import AuthContext from '../hooks/AuthContext'
 import styles from '../styles/Login'
 
 export const roleEnum = {
@@ -29,8 +28,6 @@ const Login = ({navigation}) => {
     const [password, setPassword] = useState('')
     const [confirmationPassword, setConfirmationPassword] = useState('')
     const [submitted, setSubmitted] = useState(false)
-
-    const {signUpGuru,signUpSiswa} = useContext(AuthContext)
 
     const onRoleChange = v => {
         setRole(v)
@@ -69,21 +66,12 @@ const Login = ({navigation}) => {
     }
 
     const onSignupButtonPressed = async () => {
-        if (password !== confirmationPassword) return createSignupErrorAlert()
-        if (!namaLengkap || !email || !password) {
-            return;
-        }
-        // Do Things
 
         try {
             if (role === roleEnum.guru) {
-                if (!telepon) return;
-                const guruSignupInterface = new GuruSignupInterface(namaLengkap, email, password, telepon)
-                const guruSignupObject = guruSignupInterface.publicData()
-                signUpGuru(guruSignupObject)
+                console.log('signup guru');
             } else if (role === roleEnum.siswa) {
-                // if (!NIS) return;
-                // const SiswaSignup = new SiswaSignupInterface(namaLengkap, NIS, email, pass)
+                console.log('signup siswa');
             }
 
 

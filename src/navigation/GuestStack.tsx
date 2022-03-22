@@ -4,14 +4,13 @@ import Signup from '../screens/Signup'
 
 
 const AuthStack = createNativeStackNavigator()
-const AuthStackScreens = ({state}) => {
+const AuthStackScreens = () => {
 
     return (
         <AuthStack.Navigator initialRouteName={'Login'} screenOptions={{headerShown: false}}>
               <AuthStack.Screen
                 name='Login'
                 component={Login}
-                options={{animationTypeForReplace: state.isSignedOut ? 'pop' : 'push'}}
               />
               <AuthStack.Screen
                 name='Signup'
