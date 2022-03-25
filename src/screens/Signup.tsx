@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react'
+import React, { useState, useContext } from 'react'
 import { View, Text, ScrollView, Alert } from 'react-native'
 import WithStatusBarMargin from '../components/WithStatusBarMargin'
 import Title from '../components/Title'
@@ -9,9 +9,7 @@ import SemiSlashThrough from '../components/SemiSlashThrough'
 import CustomLink from '../components/CustomLink'
 import FormSecondaryCard from '../components/FormSecondaryCard'
 import CustomPicker from '../components/CustomPicker'
-import {Picker} from '@react-native-picker/picker'
-import { GuruSignupInterface } from '../classes/guru'
-import { SiswaSignupInterface } from '../classes/siswa'
+import { Picker } from '@react-native-picker/picker'
 import styles from '../styles/Login'
 
 export const roleEnum = {
@@ -19,7 +17,7 @@ export const roleEnum = {
     siswa: 'SISWA'
 }
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
     const [namaLengkap, setNamaLengkap] = useState('')
     const [NIS, setNIS] = useState('')
     const [telepon, setTelepon] = useState()
@@ -32,7 +30,7 @@ const Login = ({navigation}) => {
     const onRoleChange = v => {
         setRole(v)
     }
-    
+
     const onNamaLengkapChange = (v) => {
         setNamaLengkap(v)
     }
@@ -76,7 +74,7 @@ const Login = ({navigation}) => {
 
 
         } catch (error) {
-            
+
         }
     }
 
@@ -92,11 +90,11 @@ const Login = ({navigation}) => {
                         />
                         {
                             role === roleEnum.siswa
-                            ? <Input
-                            placeholder={'NIS'}
-                            onChangeText={onNISChange}
-                            />
-                            : null
+                                ? <Input
+                                    placeholder={'NIS'}
+                                    onChangeText={onNISChange}
+                                />
+                                : null
                         }
 
                         <Input
@@ -106,12 +104,12 @@ const Login = ({navigation}) => {
 
                         {
                             role === roleEnum.guru
-                            ? <Input
-                            keyboardType='number-pad'
-                            placeholder={'Telepon'}
-                            onChangeText={onTeleponChange}
-                            />
-                            : null
+                                ? <Input
+                                    keyboardType='number-pad'
+                                    placeholder={'Telepon'}
+                                    onChangeText={onTeleponChange}
+                                />
+                                : null
                         }
 
                         <CustomPicker selectedValue={role} onValueChange={onRoleChange}>
@@ -140,7 +138,7 @@ const Login = ({navigation}) => {
                             onChangeText={onPasswordConfirmationChange}
                             secureTextEntry={true}
                         />
-                        <Button disabled={submitted} text={'Daftar'} style={styles.loginBtn} onPress={onSignupButtonPressed}/>
+                        <Button disabled={submitted} text={'Daftar'} style={styles.loginBtn} onPress={onSignupButtonPressed} />
                         <SemiSlashThrough style={styles.atau} text={'ATAU'} />
                         <CustomLink text={'Lupa kata sandi?'} />
                     </Card>

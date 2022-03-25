@@ -12,9 +12,9 @@ import CustomLink from '../components/CustomLink'
 import FormSecondaryCard from '../components/FormSecondaryCard'
 import { roleEnum } from './Signup'
 import styles from '../styles/Login'
-import { NavigationAction } from '@react-navigation/native'
 import { useDispatch } from 'react-redux'
 import auth from '../store/auth'
+import { signInGuru } from '../store/thunks/authThunk'
 
 const Login: React.FC = ({ navigation }) => {
     const [email, setEmail] = useState('')
@@ -22,19 +22,19 @@ const Login: React.FC = ({ navigation }) => {
     const [role, setRole] = useState(roleEnum.siswa)
     const dispatch = useDispatch()
 
-    const onUserIdentifierChange = (value) => {
+    const onUserIdentifierChange = (value: string) => {
         setEmail(value)
     }
 
-    const onPasswordChange = (value) => {
+    const onPasswordChange = (value: string) => {
         setPassword(value)
     }
 
-    const onRoleChange = v => {
+    const onRoleChange = (v: string) => {
         setRole(v)
     }
 
-    const createLoginErrorAlert = (title, message) => {
+    const createLoginErrorAlert = (title: string, message: string) => {
         Alert.alert(title, message, [
             {
                 text: 'Coba Lagi'
@@ -43,22 +43,11 @@ const Login: React.FC = ({ navigation }) => {
     }
 
     const onLoginButtonPressed = async () => {
+        try {
+            if (role === roleEnum.guru) dispatch(auth.actions.signInGuru())
+            else if (role === roleEnum.siswa) dispatch(auth.actions.signInSiswa())
+        } catch (error) {
 
-        if (role === roleEnum.guru) {
-            try {
-                console.log('Login Guru');
-                dispatch(auth.actions.signIn())
-            } catch (error) {
-                console.log('error');
-            }
-        }
-
-        if (role === roleEnum.siswa) {
-            try {
-                console.log('Login Siswa');
-            } catch (error) {
-                console.log(error);
-            }
         }
     }
 

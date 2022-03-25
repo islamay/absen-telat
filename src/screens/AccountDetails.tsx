@@ -2,14 +2,14 @@ import React, { useContext } from 'react'
 import { View, Text } from 'react-native'
 import LightBlueScreen from '../components/LightBlueScreen'
 import { useDispatch } from 'react-redux'
-import userData from '../store/userData'
+import auth from '../store/auth'
 
 const AccountDetails = () => {
     const dispatch = useDispatch()
 
     return (
         <LightBlueScreen>
-            <Text onPress={() => { dispatch(userData.actions.wipeData()) }}>Logout</Text>
+            <Text onPress={() => { dispatch(auth.actions.signOut()) }}>Logout</Text>
         </LightBlueScreen>
     )
 }

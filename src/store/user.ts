@@ -3,14 +3,12 @@ import auth from './auth'
 
 interface User {
     namaLengkap: string,
-    email: string,
-    isWaiting: boolean | null
+    email: string
 }
 
 const initialState: User = {
     namaLengkap: '',
-    email: '',
-    isWaiting: null
+    email: ''
 }
 
 const signinGuru = createAsyncThunk(
@@ -29,12 +27,14 @@ const user = createSlice({
             .addCase(auth.actions.signOut, (state) => {
                 state.namaLengkap = ''
                 state.email = ''
-                state.isWaiting = null
             })
-            .addCase(auth.actions.signIn, (state) => {
+            .addCase(auth.actions.signInGuru, (state) => {
                 state.namaLengkap = 'Dean Prayoga'
                 state.email = 'deanprayoga09@gmail.com'
-                state.isWaiting = false
+            })
+            .addCase(auth.actions.signInSiswa, (state) => {
+                state.namaLengkap = 'Muhammad Ilham Alfarisi'
+                state.email = 'deanprayoga09@gmail.com'
             })
     }
 })

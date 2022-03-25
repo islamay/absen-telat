@@ -1,8 +1,15 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, StyleProp, ViewStyle } from 'react-native'
 import styles from '../styles/Button'
 
-const Button = ({text, onPress, style, disabled}) => {
+interface ButtomProps {
+    text: string,
+    onPress: () => void,
+    style?: StyleProp<ViewStyle>,
+    disabled?: boolean
+}
+
+const Button: React.FC<ButtomProps> = ({ text, onPress, style, disabled }) => {
 
     return (
         <View style={[styles.container, style]} >

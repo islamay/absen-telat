@@ -1,12 +1,15 @@
-import React, {useContext, useEffect} from 'react'
+import React, { useContext, useEffect } from 'react'
 import { View, Text } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
 import Card from '../components/Card'
+import auth from '../store/auth'
 import styles from '../styles/Waiting'
 
 const Home = () => {
+    const dispatch = useDispatch()
 
-    const onWaitingLinkPressed = () => {
-        
+    const handleLogout = () => {
+        dispatch(auth.actions.signOut())
     }
 
 
@@ -16,7 +19,7 @@ const Home = () => {
             <View style={styles.waitingContainer}>
                 <Text style={styles.waitingTitleText}>Selamat Datang</Text>
                 <Card style={styles.waitingMainCard}>
-                    <Text style={styles.waitingParagraph}>Akun Anda Belum Aktif Hubungi Admin Untuk MengaktifkanAkun Atau <Text style={styles.waitingLink}>Logout</Text></Text>
+                    <Text style={styles.waitingParagraph}>Akun Anda Belum Aktif Hubungi Admin Untuk MengaktifkanAkun Atau <Text onPress={handleLogout} style={styles.waitingLink}>Logout</Text></Text>
                 </Card>
             </View>
         </View>
