@@ -5,14 +5,18 @@ import { AccStatus } from './src/helpers/accountEnum'
 import AuthStack from './src/navigation/GuestStack'
 import GuruStack from './src/navigation/GuruStack'
 import WaitingStack from './src/navigation/WaitingStack'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from './src/store/store'
+import { restoreAuth } from './src/store/thunks/authThunk'
 import 'react-native-gesture-handler'
 
 export default function App() {
   const { auth, user } = useSelector((state: RootState) => state)
+  const dispatch = useDispatch()
 
-  console.log(auth.token);
+  useEffect(() => {
+    dispatch(restoreAuth())
+  }, [])
 
 
   return (

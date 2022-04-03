@@ -12,15 +12,18 @@ import CustomLink from '../components/CustomLink'
 import FormSecondaryCard from '../components/FormSecondaryCard'
 import { roleEnum } from './Signup'
 import styles from '../styles/Login'
-import { useDispatch } from 'react-redux'
-import auth from '../store/auth'
+import { useDispatch, useSelector } from 'react-redux'
 import { signInGuru } from '../store/thunks/authThunk'
+import auth from '../store/auth'
+import { RootState } from '../store/store'
 
 const Login: React.FC = ({ navigation }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [role, setRole] = useState(roleEnum.siswa)
+    const authState = useSelector((state: RootState) => state.auth)
     const dispatch = useDispatch()
+
 
     const onUserIdentifierChange = (value: string) => {
         setEmail(value)
@@ -37,19 +40,25 @@ const Login: React.FC = ({ navigation }) => {
     const createLoginErrorAlert = (title: string, message: string) => {
         Alert.alert(title, message, [
             {
-                text: 'Coba Lagi'
+                text: 'Ulangi',
+                onPress: () => { dispatch(auth.actions.hideError()) }
             }
         ])
     }
 
     const onLoginButtonPressed = async () => {
         try {
-            if (role === roleEnum.guru) dispatch(auth.actions.signInGuru())
-            else if (role === roleEnum.siswa) dispatch(auth.actions.signInSiswa())
+            if (role === roleEnum.guru) dispatch(signInGuru({ email: email, password: password }))
         } catch (error) {
 
         }
     }
+
+    useEffect(() => {
+        if (authState.isError && !authState.hideError) {
+            createLoginErrorAlert('Login Gagal', authState.errorMessage)
+        }
+    }, [authState])
 
     return (
         <WithStatusBarMargin>

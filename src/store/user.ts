@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import auth from './auth'
+import { signInGuru, signInSiswa } from './thunks/authThunk'
 
 interface User {
     namaLengkap: string,
@@ -35,6 +36,10 @@ const user = createSlice({
             .addCase(auth.actions.signInSiswa, (state) => {
                 state.namaLengkap = 'Muhammad Ilham Alfarisi'
                 state.email = 'deanprayoga09@gmail.com'
+            })
+            .addCase(signInGuru.fulfilled, (state, action) => {
+                state.namaLengkap = action.payload.namaLengkap
+                state.email = action.payload.email
             })
     }
 })

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { signInGuru } from './thunks/authThunk'
+import { restoreAuth, signInGuru, signOut } from './thunks/authThunk'
 import { AccStatus, GuruRole, AccType } from '../helpers/accountEnum'
 
 
@@ -54,7 +54,6 @@ const auth = createSlice({
     },
     extraReducers: builder => {
         builder.addCase(signInGuru.pending, (state, action) => {
-
             state.isLoading = true
         })
         builder.addCase(signInGuru.fulfilled, (state, action) => {
@@ -67,7 +66,21 @@ const auth = createSlice({
             state.isLoading = false
             state.isError = true
             state.hideError = false
-            state.errorMessage = 'Failed To Login'
+            // @ts-ignore
+            state.errorMessage = action.payload.message || action.payload
+        })
+        builder.addCase(restoreAuth.fulfilled, (state, action) => {
+            if (action.payload.type === AccType.GURU) {
+                state.isLoading = false
+                state.token = action.payload.token
+                state.status = action.payload.status
+            }
+        })
+        builder.addCase(signOut.fulfilled, (state) => {
+            state.token = ''
+            state.status = null
+            state.type = null
+            state.role = null
         })
     }
 })
