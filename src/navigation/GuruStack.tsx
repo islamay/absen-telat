@@ -11,6 +11,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import VAR from '../styles/VAR'
 import Test from '../screens/Test'
+import SiswaAccount from '../screens/SiswaAccount'
 
 const DataKeterlambatanStack = createNativeStackNavigator()
 const DataKeterlambatanScreens = () => {
@@ -96,6 +97,30 @@ const DataSiswaStackScreens = () => {
     )
 }
 
+const AkunSiswaStack = createNativeStackNavigator()
+const AkunSiswaStackScreens = () => {
+    return (
+        <AkunSiswaStack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: VAR.secondaryBackgroundColor
+                },
+                headerTitleStyle: {
+                    color: VAR.darkBlue
+                },
+                headerTintColor: VAR.darkBlue
+            }}
+        >
+            <AkunSiswaStack.Screen
+                name='AkunSiswa'
+                component={SiswaAccount}
+                options={{ title: 'Akun Siswa' }}
+            />
+
+        </AkunSiswaStack.Navigator>
+    )
+}
+
 const GuruDrawerStack = createDrawerNavigator()
 const GuruDrawerStackScreens = () => {
 
@@ -108,6 +133,10 @@ const GuruDrawerStackScreens = () => {
             <GuruDrawerStack.Screen
                 name='Data Siswa'
                 component={DataSiswaStackScreens}
+            />
+            <GuruDrawerStack.Screen
+                name='Akun Siswa'
+                component={AkunSiswaStackScreens}
             />
             <GuruDrawerStack.Screen
                 name='Data Keterlambatan'

@@ -2,12 +2,16 @@ import rootReducer from './rootReducer'
 import { configureStore } from '@reduxjs/toolkit'
 import keterlamabatanApi from '../services/keterlambatan'
 import dataSiswaApi from '../services/dataSiswa'
+import siswaAccountApi from '../services/siswaAccount'
 import { setupListeners } from '@reduxjs/toolkit/dist/query'
 
 const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => {
-        return getDefaultMiddleware().concat(keterlamabatanApi.middleware).concat(dataSiswaApi.middleware)
+        return getDefaultMiddleware()
+            .concat(keterlamabatanApi.middleware)
+            .concat(dataSiswaApi.middleware)
+            .concat(siswaAccountApi.middleware)
     }
 })
 

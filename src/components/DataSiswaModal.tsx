@@ -4,10 +4,12 @@ import DefaultModal, { Props as DefaultModalProps } from './DefaultModal'
 import DisplaySiswaData from './DisplaySiswaData'
 
 interface Props extends DefaultModalProps {
-
+    nis: string,
+    namaLengkap: string,
+    fullClass: string
 }
 
-const DataSiswaModal: React.FC<Props> = ({ visible, closeModal }) => {
+const DataSiswaModal: React.FC<Props> = ({ visible, closeModal, nis, namaLengkap, fullClass }) => {
 
     return (
         <DefaultModal
@@ -15,9 +17,9 @@ const DataSiswaModal: React.FC<Props> = ({ visible, closeModal }) => {
             closeModal={closeModal}
         >
             <DisplaySiswaData
-                nis='123456789'
-                namaLengkap='Dean Prayoga'
-                fullClass='X RPL'
+                nis={nis}
+                namaLengkap={namaLengkap}
+                fullClass={fullClass}
                 isSingle={true}
             />
         </DefaultModal>

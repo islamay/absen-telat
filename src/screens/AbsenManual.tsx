@@ -41,7 +41,7 @@ const AbsenManual = () => {
             <AddKeterlambatanModal
                 visible={modalVisible}
                 nis={selectedSiswa.nis}
-                namaLengkap={selectedSiswa.nis}
+                namaLengkap={selectedSiswa.namaLengkap}
                 fullClass={selectedSiswa.fullClass}
                 closeModal={() => setModalVisible(false)}
             />

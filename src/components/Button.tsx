@@ -12,7 +12,7 @@ interface ButtomProps {
 const Button: React.FC<ButtomProps> = ({ text, onPress, style, disabled }) => {
 
     return (
-        <View style={[styles.container, style]} >
+        <View style={[styles.container, style, disabled && styles.disabled]} >
             <TouchableOpacity onPress={onPress} disabled={disabled}>
                 <Text style={styles.text}>{text}</Text>
             </TouchableOpacity>

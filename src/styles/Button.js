@@ -7,7 +7,9 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         borderRadius: 5
     },
-
+    disabled: {
+        opacity: .5
+    },
     text: {
         textAlign: 'center',
         fontSize: VAR.xSmallFontSize,

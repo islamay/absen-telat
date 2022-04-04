@@ -16,7 +16,7 @@ interface Props {
 
 const AddKeterlambatanModal: React.FC<Props> = ({ nis, namaLengkap, fullClass, visible, closeModal }) => {
     const [alasan, setAlasan] = useState('')
-    const [addKeterlambatan, { isLoading }] = useAddKeterlambatanMutation()
+    const [addKeterlambatan, { isLoading, isSuccess }] = useAddKeterlambatanMutation()
 
     const onAlasanChange = (v: string) => {
         setAlasan(v)
@@ -24,11 +24,21 @@ const AddKeterlambatanModal: React.FC<Props> = ({ nis, namaLengkap, fullClass, v
 
     const onCorfimationPressed = () => {
         addKeterlambatan({ nis, alasan })
+        closeModalWithCleanup()
+    }
+
+    const resetState = () => {
+        setAlasan('')
+    }
+
+    const closeModalWithCleanup = () => {
+        resetState()
+        closeModal()
     }
 
     return (
         <DefaultModal
-            closeModal={closeModal}
+            closeModal={closeModalWithCleanup}
             visible={visible}
         >
             <DisplaySiswaData

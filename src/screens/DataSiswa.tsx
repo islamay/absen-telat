@@ -55,6 +55,9 @@ const DataSiswa = () => {
                 closeModal={() => { setAddModalVisible(false) }}
             />
             <DataSiswaModal
+                nis={selectedSiswa.nis}
+                fullClass={selectedSiswa.fullClass}
+                namaLengkap={selectedSiswa.namaLengkap}
                 visible={dataSiswaModalVisible}
                 closeModal={() => setDataSiswaModalVisible(false)}
             />

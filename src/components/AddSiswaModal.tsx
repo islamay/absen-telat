@@ -1,4 +1,4 @@
-import React, { useState, SetStateAction } from 'react'
+import React, { useState } from 'react'
 import { Text } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import DefaultModal, { Props as DefaultModalProps, Gap } from './DefaultModal'
@@ -6,6 +6,7 @@ import Input from './Input'
 import Button from './Button'
 import CustomPicker from './CustomPicker'
 import { validJurusan, Jurusan } from '../helpers/jurusan'
+import { useAddSiswaMutation } from '../services/dataSiswa'
 
 interface Props extends DefaultModalProps {
 
@@ -19,13 +20,34 @@ interface NewSiswa {
     jurusan: Jurusan | ''
 }
 
+const validateNewSiswa = (newSiswa: NewSiswa) => {
+    const nisValid = !!newSiswa.nis
+    const namaLengkapValid = !!newSiswa.namaLengkap
+    const kelasValid = newSiswa.kelas >= 10 && newSiswa.kelas <= 12
+    const kelasNoValid = newSiswa.kelasNo >= 1 && newSiswa.kelasNo <= 3
+    const jurusanValid = !!newSiswa.jurusan
+
+    return nisValid && namaLengkapValid && kelasValid && kelasNoValid && jurusanValid
+}
+
 const AddSiswaModal: React.FC<Props> = ({ visible, closeModal }) => {
     const [newSiswa, setNewSiswa] = useState<NewSiswa>({ nis: '', namaLengkap: '', kelas: 10, kelasNo: 1, jurusan: '' })
+    const isValidNewSiswa = validateNewSiswa(newSiswa)
+    const [addSiswa, { isLoading }] = useAddSiswaMutation()
 
     const onNisChange = (v: string) => {
         setNewSiswa((prev) => {
             return { ...prev, nis: v }
         })
+    }
+
+    const resetNewSiswaState = () => {
+        setNewSiswa({ nis: '', namaLengkap: '', kelas: 0, kelasNo: 0, jurusan: '' })
+    }
+
+    const closeModalWithCleanup = () => {
+        resetNewSiswaState()
+        closeModal()
     }
 
     const onNamaChange = (v: string) => {
@@ -53,13 +75,14 @@ const AddSiswaModal: React.FC<Props> = ({ visible, closeModal }) => {
     }
 
     const onConfirmationButtonPressed = () => {
-
+        addSiswa(newSiswa)
+        closeModalWithCleanup()
     }
 
     return (
         <DefaultModal
             visible={visible}
-            closeModal={closeModal}
+            closeModal={closeModalWithCleanup}
         >
             <Input
                 placeholder='Nis'
@@ -92,9 +115,9 @@ const AddSiswaModal: React.FC<Props> = ({ visible, closeModal }) => {
 
             <CustomPicker
                 onValueChange={onJurusanChange}
-                selectedValue={newSiswa.kelasNo}
+                selectedValue={newSiswa.jurusan}
             >
-                <Picker.Item label='Pilih Jurusan' value={newSiswa.jurusan} />
+                <Picker.Item label='Pilih Jurusan' value='' />
                 {validJurusan.map(v => {
                     return (
                         <Picker.Item key={v} label={v} value={v} />
@@ -109,6 +132,7 @@ const AddSiswaModal: React.FC<Props> = ({ visible, closeModal }) => {
             <Button
                 text='Konfirmasi'
                 onPress={onConfirmationButtonPressed}
+                disabled={!isValidNewSiswa}
             />
 
         </DefaultModal>

@@ -1,5 +1,5 @@
 
 
-export const BACKEND_URI = 'http://192.168.1.5:5000'
+export const BACKEND_URI = 'http://192.168.43.141:5000'
 
 

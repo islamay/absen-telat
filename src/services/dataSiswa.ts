@@ -13,6 +13,8 @@ export interface ISiswa {
     fullClass: string
 }
 
+type IAddSiswa = Omit<ISiswa, '_id' | 'kelasString' | 'fullClass'>;
+
 const dataSiswaApi = createApi({
     reducerPath: 'siswa',
     baseQuery: fetchBaseQuery({
@@ -25,13 +27,23 @@ const dataSiswaApi = createApi({
             return headers
         },
     }),
+    tagTypes: ['Siswa'],
     endpoints: (builder) => ({
         getSiswaByName: builder.query<ISiswa[], string>({
-            query: (name) => `/data-siswa/?name=${name}`
+            query: (name) => `/data-siswa/?name=${name}`,
+            providesTags: ['Siswa']
+        }),
+        addSiswa: builder.mutation<ISiswa, IAddSiswa>({
+            query: (siswa) => ({
+                url: '/data-siswa',
+                body: siswa,
+                method: 'POST'
+            }),
+            invalidatesTags: ['Siswa']
         })
     })
 })
 
-export const { useGetSiswaByNameQuery } = dataSiswaApi
+export const { useGetSiswaByNameQuery, useAddSiswaMutation } = dataSiswaApi
 
 export default dataSiswaApi

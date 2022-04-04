@@ -1,13 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { BACKEND_URI } from '../helpers/env'
 import { RootState } from '../store/store'
+import { ISiswa } from './dataSiswa'
 
 export interface Keterlambatan {
     _id: string,
     idGuru: string,
     nis: string,
     alasan: string,
-    date: Date
+    date: Date,
+    siswa: ISiswa
 }
 
 interface AddKeterlambatanBody {
@@ -34,7 +36,7 @@ const keterlambatan = createApi({
             providesTags: ['Post']
         }),
         getKeterlambatanByNis: builder.query<Keterlambatan[], string>({
-            query: (nis) => `/keterlambatan/siswa/${nis}`
+            query: (nis) => `/keterlambatan?nis=${nis}`
         }),
         addKeterlambatan: builder.mutation<Keterlambatan, AddKeterlambatanBody>({
             query: param => ({

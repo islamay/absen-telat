@@ -17,7 +17,7 @@ const Keterlambatan = () => {
         return (
             <DisplayKeterlambatan
                 nis={item.nis}
-                namaLengkap='Dean Prayoga'
+                namaLengkap={item.siswa.namaLengkap}
                 kelas='X RPL'
                 alasan={item.alasan}
                 isLast={data && data.length - 1 === index}
