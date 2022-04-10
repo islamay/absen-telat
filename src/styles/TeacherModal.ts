@@ -2,18 +2,10 @@ import { StyleSheet } from 'react-native'
 import VAR from './VAR'
 
 const styles = StyleSheet.create({
-    container: {
+    box: {
         padding: 20,
-        borderColor: VAR.outlineDefaultColor,
-        borderTopWidth: 1,
-    },
-    lastContainer: {
-        borderBottomWidth: 1
-    },
-    singleContainer: {
-        padding: 20,
-        borderColor: VAR.outlineDefaultColor,
         borderWidth: 1,
+        borderColor: VAR.outlineDefaultColor
     },
     header: {
         fontWeight: '700'

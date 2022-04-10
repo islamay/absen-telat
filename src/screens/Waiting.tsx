@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { View, Text } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
+import { signOut } from '../store/thunks/authThunk'
 import Card from '../components/Card'
 import auth from '../store/auth'
 import styles from '../styles/Waiting'
@@ -9,7 +10,7 @@ const Home = () => {
     const dispatch = useDispatch()
 
     const handleLogout = () => {
-        dispatch(auth.actions.signOut())
+        dispatch(signOut())
     }
 
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { ListRenderItem, Text } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import LightBlueScreen from '../components/LightBlueScreen'
@@ -20,14 +20,11 @@ const SiswaAccount: React.FC = () => {
     const [modalVisible, setModalVisible] = useState(false)
     const { data, isError, error } = useGetSiswaAccountQuery(name)
 
-    console.log(isError);
-
-
-    const onSearchChange = (v: string) => {
+    const onSearchChange = useCallback((v: string) => {
         setName(v)
-    }
+    }, [name])
 
-    const renderSiswaAccount: ListRenderItem<GetSiswaResponse> = ({ item, index }) => {
+    const renderSiswaAccount: ListRenderItem<GetSiswaResponse> = useCallback(({ item, index }) => {
 
         const onPress = () => {
             setModalVisible(true)
@@ -49,7 +46,7 @@ const SiswaAccount: React.FC = () => {
                 onPress={onPress}
             />
         )
-    }
+    }, [data])
 
     const closeModal = () => {
         setModalVisible(false)

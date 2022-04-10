@@ -10,23 +10,42 @@ interface SignInPayload {
     password: string
 }
 
-interface GuruAuthSuccessResponse {
+interface StudentSignUpPayload extends SignInPayload {
+    nis: string
+}
+
+interface AuthSuccessResponse {
     email: string,
     namaLengkap: string,
-    role: GuruRole,
     status: AccStatus,
     token: string
 }
 
-interface SiswaAuthSuccessResponse {
+interface GuruAuthSuccessResponse extends AuthSuccessResponse {
+    role: GuruRole
+}
 
+interface StudentAuthSuccess extends AuthSuccessResponse {
+    nis: string,
+    fullClass: string
 }
 
 const authStorageKey = 'auth'
 
-const saveAuthInStorage = async (data: GuruAuthSuccessResponse, accType: AccType) => {
+const saveAuthInStorage = async (data: any, accType: AccType) => {
     try {
-        const payload = { token: data.token, type: accType, status: data.status, role: data.role }
+
+        const payload: GuruAuthSuccessResponse & StudentAuthSuccess & { type: AccType } = {
+            nis: data.nis,
+            namaLengkap: data.namaLengkap,
+            email: data.email,
+            token: data.token,
+            type: accType,
+            status: data.status,
+            role: data.role || '',
+            fullClass: data.fullClass || ''
+        }
+
         await SecureStorage.setItemAsync(authStorageKey, JSON.stringify(payload))
     } catch (error) {
         throw error
@@ -38,8 +57,8 @@ export const signInGuru = createAsyncThunk(
     async (payload: SignInPayload, { rejectWithValue }) => {
         const { email, password } = payload
         try {
-            const result = await backendApi.post('/guru/signin', { email, password })
-            const data = result.data as GuruAuthSuccessResponse
+            const result = await backendApi.post<GuruAuthSuccessResponse>('/guru/signin', { email, password })
+            const data = result.data
             await saveAuthInStorage(data, AccType.GURU)
 
             return data
@@ -54,13 +73,34 @@ export const signInGuru = createAsyncThunk(
     }
 )
 
+export const signUpSiswa = createAsyncThunk(
+    'auth/signUpSiswa',
+    async (payload: StudentSignUpPayload, { rejectWithValue }) => {
+        try {
+            const { nis, email, password } = payload
+            const result = await backendApi.post<StudentAuthSuccess>('/user-siswa/signup', { nis, email, password })
+            const data = result.data
+            await saveAuthInStorage(data, AccType.SISWA)
+
+            return data
+        } catch (error) {
+            return rejectWithValue('Cannot Signup')
+        }
+    }
+)
+
 export const signInSiswa = createAsyncThunk(
     'auth/signInSiswa',
     async (payload: SignInPayload, { rejectWithValue }) => {
         try {
+            const { email, password } = payload
+            const result = await backendApi.post<StudentAuthSuccess>('/user-siswa/signin', { email, password })
+            const data = result.data
+            await saveAuthInStorage(data, AccType.SISWA)
 
+            return data
         } catch (error) {
-
+            return rejectWithValue('Cannot Login')
         }
     }
 )
@@ -70,16 +110,19 @@ export const signInSiswa = createAsyncThunk(
 export const restoreAuth = createAsyncThunk(
     'auth/restoreAuth',
     async () => {
+
         try {
             const rawAuth = await SecureStorage.getItemAsync(authStorageKey)
             if (!rawAuth) throw new Error()
+            const auth = JSON.parse(rawAuth) as GuruAuthSuccessResponse & StudentAuthSuccess & { type: AccType }
 
-            const auth = JSON.parse(rawAuth)
-            return auth as { token: string, type: AccType, status: AccStatus, role: GuruRole }
-
+            return auth
         } catch (error) {
             throw error
         }
+    },
+    {
+
     }
 )
 

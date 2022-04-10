@@ -1,31 +1,23 @@
-
 import GuruHome from '../screens/GuruHome'
 import AbsenManual from '../screens/AbsenManual'
 import AbsenWithScan from '../screens/AbsenWithScan'
 import AccountDetails from '../screens/AccountDetails'
 import DataKeterlambatan from '../screens/DataKeterlambatan'
 import DataSiswa from '../screens/DataSiswa'
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
-import VAR from '../styles/VAR'
 import Test from '../screens/Test'
 import SiswaAccount from '../screens/SiswaAccount'
+import GuruData from '../screens/TeacherData'
+import { defaultNativeHeaderOptions } from './defaultScreenOptions'
+import { MaterialIcons, FontAwesome5, Ionicons } from '@expo/vector-icons'
+import VAR from '../styles/VAR'
 
 const DataKeterlambatanStack = createNativeStackNavigator()
 const DataKeterlambatanScreens = () => {
     return (
         <DataKeterlambatanStack.Navigator
-            screenOptions={{
-                headerStyle: {
-                    backgroundColor: VAR.secondaryBackgroundColor
-                },
-                headerTitleStyle: {
-                    color: VAR.darkBlue
-                },
-                headerTintColor: VAR.darkBlue
-            }}
+            screenOptions={defaultNativeHeaderOptions}
         >
             <DataKeterlambatanStack.Screen
                 name='DataKeterlambatan'
@@ -41,15 +33,7 @@ const AbsenStackScreens = () => {
     return (
         <AbsenStack.Navigator
             initialRouteName='ChooseAbsenMethod'
-            screenOptions={{
-                headerStyle: {
-                    backgroundColor: VAR.secondaryBackgroundColor
-                },
-                headerTitleStyle: {
-                    color: VAR.darkBlue
-                },
-                headerTintColor: VAR.darkBlue
-            }}
+            screenOptions={defaultNativeHeaderOptions}
         >
             <AbsenStack.Screen
                 name='ChooseAbsenMethod'
@@ -78,15 +62,7 @@ const DataSiswaStack = createNativeStackNavigator()
 const DataSiswaStackScreens = () => {
     return (
         <DataSiswaStack.Navigator
-            screenOptions={{
-                headerStyle: {
-                    backgroundColor: VAR.secondaryBackgroundColor
-                },
-                headerTitleStyle: {
-                    color: VAR.darkBlue
-                },
-                headerTintColor: VAR.darkBlue
-            }}
+            screenOptions={defaultNativeHeaderOptions}
         >
             <DataSiswaStack.Screen
                 name='DataSiswa'
@@ -97,19 +73,26 @@ const DataSiswaStackScreens = () => {
     )
 }
 
+const TeacherDataStack = createNativeStackNavigator()
+const TeacherDataStackScreens = () => {
+    return (
+        <TeacherDataStack.Navigator
+            screenOptions={defaultNativeHeaderOptions}
+        >
+            <TeacherDataStack.Screen
+                name='TeacherData'
+                options={{ title: 'Data Guru' }}
+                component={GuruData}
+            />
+        </TeacherDataStack.Navigator>
+    )
+}
+
 const AkunSiswaStack = createNativeStackNavigator()
 const AkunSiswaStackScreens = () => {
     return (
         <AkunSiswaStack.Navigator
-            screenOptions={{
-                headerStyle: {
-                    backgroundColor: VAR.secondaryBackgroundColor
-                },
-                headerTitleStyle: {
-                    color: VAR.darkBlue
-                },
-                headerTintColor: VAR.darkBlue
-            }}
+            screenOptions={defaultNativeHeaderOptions}
         >
             <AkunSiswaStack.Screen
                 name='AkunSiswa'
@@ -121,71 +104,81 @@ const AkunSiswaStackScreens = () => {
     )
 }
 
+const AccountDetailStack = createNativeStackNavigator()
+const AccountDetailStackScreens = () => {
+
+    return (
+        <AccountDetailStack.Navigator screenOptions={defaultNativeHeaderOptions}>
+            <AccountDetailStack.Screen
+                name='AccountDetail'
+                component={AccountDetails}
+                options={{ title: 'Akun' }}
+            />
+        </AccountDetailStack.Navigator>
+    )
+}
+
 const GuruDrawerStack = createDrawerNavigator()
 const GuruDrawerStackScreens = () => {
 
     return (
-        <GuruDrawerStack.Navigator screenOptions={{ headerShown: false }}>
+        <GuruDrawerStack.Navigator screenOptions={{ headerShown: false, }}>
             <GuruDrawerStack.Screen
                 name='Absensi'
                 component={AbsenStackScreens}
+                options={{
+                    drawerIcon: ({ focused }) => {
+                        return <MaterialIcons name='assignment' style={{ width: 30 }} size={24} color={focused ? VAR.darkBlue : VAR.secondaryBackgroundColor} />
+                    }
+                }}
+            />
+            <GuruDrawerStack.Screen
+                name='Data Guru'
+                component={TeacherDataStackScreens}
+                options={{
+                    drawerIcon: ({ focused }) => {
+                        return <FontAwesome5 name='user-tie' style={{ width: 30 }} size={24} color={focused ? VAR.darkBlue : VAR.secondaryBackgroundColor} />
+                    }
+                }}
             />
             <GuruDrawerStack.Screen
                 name='Data Siswa'
                 component={DataSiswaStackScreens}
+                options={{
+                    drawerIcon: ({ focused }) => {
+                        return <FontAwesome5 name='user-graduate' style={{ width: 30 }} size={24} color={focused ? VAR.darkBlue : VAR.secondaryBackgroundColor} />
+                    }
+                }}
             />
             <GuruDrawerStack.Screen
                 name='Akun Siswa'
                 component={AkunSiswaStackScreens}
+                options={{
+                    drawerIcon: ({ focused }) => {
+                        return <FontAwesome5 name='user-friends' style={{ width: 30 }} size={24} color={focused ? VAR.darkBlue : VAR.secondaryBackgroundColor} />
+                    }
+                }}
             />
             <GuruDrawerStack.Screen
                 name='Data Keterlambatan'
                 component={DataKeterlambatanScreens}
+                options={{
+                    drawerIcon: ({ focused }) => {
+                        return <MaterialIcons name='assignment' style={{ width: 30 }} size={24} color={focused ? VAR.darkBlue : VAR.secondaryBackgroundColor} />
+                    }
+                }}
+            />
+            <GuruDrawerStack.Screen
+                name='Akun'
+                component={AccountDetailStackScreens}
+                options={{
+                    drawerIcon: ({ focused }) => {
+                        return <Ionicons name='settings-sharp' style={{ width: 30 }} size={24} color={focused ? VAR.darkBlue : VAR.secondaryBackgroundColor} />
+                    }
+                }}
             />
         </GuruDrawerStack.Navigator>
     )
 }
 
-const GuruStack = createBottomTabNavigator()
-const GuruStackScreens = () => {
-    return (
-        <GuruStack.Navigator
-            initialRouteName={'Home'}
-            screenOptions={({ route }) => ({
-                headerStyle: {
-                    backgroundColor: VAR.secondaryBackgroundColor
-                },
-                headerTitleStyle: {
-                    color: VAR.darkBlue
-                },
-                headerShadowVisible: true,
-                tabBarHideOnKeyboard: true,
-                tabBarIcon: ({ focused }) => {
-                    if (route.name === 'Beranda') {
-                        const iconName = focused ? 'ios-home' : 'ios-home-outline'
-                        return <Ionicons name={iconName} size={VAR.mediumFontSize} color={VAR.darkBlue} />
-
-                    } else if (route.name === 'AccountDetails') {
-                        const name = focused ? 'user-alt' : 'user'
-                        return <FontAwesome5 name={name} size={VAR.mediumFontSize} color={VAR.darkBlue} />
-                    }
-                },
-            })}
-        >
-            <GuruStack.Screen
-                name='Beranda'
-                component={GuruDrawerStackScreens}
-                options={{ headerShown: false }}
-            />
-
-            <GuruStack.Screen
-                name='AccountDetails'
-                component={AccountDetails}
-                options={{ title: 'Akun' }}
-            />
-        </GuruStack.Navigator>
-
-    )
-}
-
-export default GuruStackScreens
+export default GuruDrawerStackScreens

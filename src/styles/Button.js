@@ -15,7 +15,9 @@ const styles = StyleSheet.create({
         fontSize: VAR.xSmallFontSize,
         fontWeight: 'bold',
         color: VAR.white,
-
+    },
+    danger: {
+        backgroundColor: VAR.dangerText
     }
 })
 

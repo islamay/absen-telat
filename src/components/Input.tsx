@@ -1,16 +1,16 @@
 import React from 'react'
-import { TextInput, View, Text, KeyboardTypeOptions } from 'react-native'
+import { TextInput, View, Text, KeyboardTypeOptions, TextInputProps } from 'react-native'
 import styles from '../styles/Input'
 
-interface InputProps {
+interface InputProps extends TextInputProps {
     hint?: string,
-    placeholder?: string,
     onChangeText?: (value: string) => void;
     secureTextEntry?: boolean,
     keyboardType?: KeyboardTypeOptions
+    value?: string
 }
 
-const Input: React.FC<InputProps> = ({ hint, placeholder, onChangeText, secureTextEntry, keyboardType = 'default' }) => {
+const Input: React.FC<InputProps> = ({ hint, placeholder, onChangeText, secureTextEntry, keyboardType = 'default', value, ...args }) => {
 
     return (
         <View style={styles.container}>
@@ -20,11 +20,13 @@ const Input: React.FC<InputProps> = ({ hint, placeholder, onChangeText, secureTe
 
             <View style={styles.inputContainer}>
                 <TextInput
+                    value={value}
                     keyboardType={keyboardType}
                     secureTextEntry={secureTextEntry}
                     placeholder={placeholder}
                     onChangeText={onChangeText}
                     style={styles.textInput}
+                    {...args}
                 />
             </View>
         </View>

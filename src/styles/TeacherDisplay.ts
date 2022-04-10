@@ -4,16 +4,12 @@ import VAR from './VAR'
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        borderColor: VAR.outlineDefaultColor,
+        borderTopColor: VAR.outlineDefaultColor,
         borderTopWidth: 1,
     },
     lastContainer: {
+        borderBottomColor: VAR.outlineDefaultColor,
         borderBottomWidth: 1
-    },
-    singleContainer: {
-        padding: 20,
-        borderColor: VAR.outlineDefaultColor,
-        borderWidth: 1,
     },
     header: {
         fontWeight: '700'

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { restoreAuth, signInGuru, signOut } from './thunks/authThunk'
+import { restoreAuth, signInGuru, signOut, signUpSiswa, signInSiswa } from './thunks/authThunk'
 import { AccStatus, GuruRole, AccType } from '../helpers/accountEnum'
 
 
@@ -8,6 +8,7 @@ interface AuthState {
     type: AccType | null,
     status: AccStatus | null,
     role: GuruRole | null,
+    isAuthenticated: boolean,
 
     isLoading: boolean,
     isError: boolean,
@@ -20,8 +21,9 @@ const initialState: AuthState = {
     status: null,
     type: null,
     role: null,
+    isAuthenticated: false,
 
-    isLoading: false,
+    isLoading: true,
     isError: false,
     hideError: true,
     errorMessage: ''
@@ -34,17 +36,6 @@ const auth = createSlice({
         hideError: (state) => {
             state.hideError = true
         },
-        signInGuru: (state) => {
-            state.token = 'Bearer Adka0wiorKJWAROKsx0cmxzlASDFOIZ390iLKSMFqew'
-            state.status = AccStatus.AKTIF
-            state.type = AccType.GURU
-            state.role = GuruRole.ADMIN
-        },
-        signInSiswa: (state) => {
-            state.token = 'Bearer Adka0wiorKJWAROKsx0cmxzlASDFOIZ390iLKSMFqew'
-            state.status = AccStatus.AKTIF
-            state.type = AccType.SISWA
-        },
         signOut: (state) => {
             state.token = ''
             state.status = null
@@ -53,11 +44,28 @@ const auth = createSlice({
         }
     },
     extraReducers: builder => {
+        builder.addCase(restoreAuth.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isAuthenticated = true
+            state.token = action.payload.token
+            state.status = action.payload.status
+            state.type = action.payload.type
+
+            if (action.payload.type === AccType.GURU) {
+                state.role = action.payload.role
+            }
+
+        })
+        builder.addCase(restoreAuth.rejected, (state, action) => {
+            state.isLoading = false
+        })
         builder.addCase(signInGuru.pending, (state, action) => {
             state.isLoading = true
         })
         builder.addCase(signInGuru.fulfilled, (state, action) => {
             state.isLoading = false
+            state.isAuthenticated = true
+            state.type = AccType.GURU
             state.token = action.payload.token
             state.status = action.payload.status
             state.role = action.payload.role
@@ -69,17 +77,37 @@ const auth = createSlice({
             // @ts-ignore
             state.errorMessage = action.payload.message || action.payload
         })
-        builder.addCase(restoreAuth.fulfilled, (state, action) => {
-            if (action.payload.type === AccType.GURU) {
-                state.isLoading = false
-                state.token = action.payload.token
-                state.status = action.payload.status
-            }
+        builder.addCase(signUpSiswa.pending, (state, action) => {
+            state.isLoading = true
         })
-        builder.addCase(signOut.fulfilled, (state) => {
+        builder.addCase(signUpSiswa.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isAuthenticated = true
+            state.type = AccType.SISWA
+            state.token = action.payload.token
+            state.status = action.payload.status
+        })
+        builder.addCase(signUpSiswa.rejected, (state, action) => {
+            state.isLoading = true
+        })
+        builder.addCase(signInSiswa.pending, (state, action) => {
+            state.isLoading = true
+        })
+        builder.addCase(signInSiswa.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isAuthenticated = true
+            state.type = AccType.SISWA
+            state.token = action.payload.token
+            state.status = action.payload.status
+        })
+        builder.addCase(signInSiswa.rejected, (state, action) => {
+            state.isLoading = true
+        })
+        builder.addCase(signOut.fulfilled, (state, payload) => {
+            state.isAuthenticated = false
             state.token = ''
-            state.status = null
-            state.type = null
+            state.status =
+                state.type = null
             state.role = null
         })
     }

@@ -8,50 +8,36 @@ import Button from '../components/Button'
 import SemiSlashThrough from '../components/SemiSlashThrough'
 import CustomLink from '../components/CustomLink'
 import FormSecondaryCard from '../components/FormSecondaryCard'
-import CustomPicker from '../components/CustomPicker'
-import { Picker } from '@react-native-picker/picker'
 import styles from '../styles/Login'
+import { useDispatch } from 'react-redux'
+import { signUpSiswa } from '../store/thunks/authThunk'
 
 export const roleEnum = {
     guru: 'GURU',
     siswa: 'SISWA'
 }
 
-const Login = ({ navigation }) => {
-    const [namaLengkap, setNamaLengkap] = useState('')
+const Login: React.FC = ({ navigation }) => {
     const [NIS, setNIS] = useState('')
-    const [telepon, setTelepon] = useState()
     const [email, setEmail] = useState('')
-    const [role, setRole] = useState(roleEnum.siswa)
     const [password, setPassword] = useState('')
     const [confirmationPassword, setConfirmationPassword] = useState('')
     const [submitted, setSubmitted] = useState(false)
+    const dispatch = useDispatch()
 
-    const onRoleChange = v => {
-        setRole(v)
-    }
-
-    const onNamaLengkapChange = (v) => {
-        setNamaLengkap(v)
-    }
-
-    const onNISChange = (v) => {
+    const onNISChange = (v: string) => {
         setNIS(v)
     }
 
-    const onEmailChange = (v) => {
+    const onEmailChange = (v: string) => {
         setEmail(v)
     }
 
-    const onTeleponChange = (v) => {
-        setTelepon(v)
-    }
-
-    const onPasswordChange = (v) => {
+    const onPasswordChange = (v: string) => {
         setPassword(v)
     }
 
-    const onPasswordConfirmationChange = (v) => {
+    const onPasswordConfirmationChange = (v: string) => {
         setConfirmationPassword(v)
     }
 
@@ -64,18 +50,7 @@ const Login = ({ navigation }) => {
     }
 
     const onSignupButtonPressed = async () => {
-
-        try {
-            if (role === roleEnum.guru) {
-                console.log('signup guru');
-            } else if (role === roleEnum.siswa) {
-                console.log('signup siswa');
-            }
-
-
-        } catch (error) {
-
-        }
+        dispatch(signUpSiswa({ nis: NIS, email, password }))
     }
 
     return (
@@ -85,47 +60,15 @@ const Login = ({ navigation }) => {
                     <Title>Signup</Title>
                     <Card style={styles.firstCard}>
                         <Input
-                            placeholder={'Nama Lengkap'}
-                            onChangeText={onNamaLengkapChange}
+                            placeholder={'NIS'}
+                            onChangeText={onNISChange}
                         />
-                        {
-                            role === roleEnum.siswa
-                                ? <Input
-                                    placeholder={'NIS'}
-                                    onChangeText={onNISChange}
-                                />
-                                : null
-                        }
 
                         <Input
                             placeholder={'Email'}
                             onChangeText={onEmailChange}
                         />
 
-                        {
-                            role === roleEnum.guru
-                                ? <Input
-                                    keyboardType='number-pad'
-                                    placeholder={'Telepon'}
-                                    onChangeText={onTeleponChange}
-                                />
-                                : null
-                        }
-
-                        <CustomPicker selectedValue={role} onValueChange={onRoleChange}>
-                            <Picker.Item label={'Siswa'} value={roleEnum.siswa} />
-                            <Picker.Item label={'Guru'} value={roleEnum.guru} />
-                        </CustomPicker>
-
-                        {/* {
-                            role === roleEnum.siswa
-                            ? <CustomPicker selectedValue={role} onValueChange={onRoleChange}>
-                            <Picker.Item label={'X'} value={roleEnum.siswa} />
-                            <Picker.Item label={'XI'} value={roleEnum.guru} />
-                            <Picker.Item label={'XII'} value={roleEnum.guru} />
-                        </CustomPicker>
-                            : null
-                        } */}
 
                         <Input
                             hint={'Password Harus Memiliki Setidaknya 8 Huruf'}
@@ -139,8 +82,6 @@ const Login = ({ navigation }) => {
                             secureTextEntry={true}
                         />
                         <Button disabled={submitted} text={'Daftar'} style={styles.loginBtn} onPress={onSignupButtonPressed} />
-                        <SemiSlashThrough style={styles.atau} text={'ATAU'} />
-                        <CustomLink text={'Lupa kata sandi?'} />
                     </Card>
 
                     <FormSecondaryCard

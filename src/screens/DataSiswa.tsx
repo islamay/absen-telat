@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, FlatList, ListRenderItem } from 'react-native'
 import LightBlueScreen from '../components/LightBlueScreen'
 import styles from '../styles/AbsenManual'
@@ -36,10 +36,10 @@ const DataSiswa = () => {
     const renderSiswaData: ListRenderItem<ISiswa> = ({ item, index }) => {
         return (
             <DisplaySiswaData
+                isLast={data?.length === index + 1}
                 nis={item.nis}
                 namaLengkap={item.namaLengkap}
                 fullClass={item.fullClass}
-                isLast={data && data.length - 1 === index}
                 onPress={({ nis, namaLengkap, fullClass }) => {
                     setSelectedSiswa({ nis, namaLengkap, fullClass })
                     setDataSiswaModalVisible(true)
@@ -71,7 +71,7 @@ const DataSiswa = () => {
                 data={data}
                 renderItem={renderSiswaData}
                 keyExtractor={data => data._id}
-                style={styles.listContainer}
+                style={{ flex: 1 }}
             />
 
             <FloatingButton

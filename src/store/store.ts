@@ -1,9 +1,10 @@
 import rootReducer from './rootReducer'
 import { configureStore } from '@reduxjs/toolkit'
+import { setupListeners } from '@reduxjs/toolkit/dist/query'
 import keterlamabatanApi from '../services/keterlambatan'
 import dataSiswaApi from '../services/dataSiswa'
 import siswaAccountApi from '../services/siswaAccount'
-import { setupListeners } from '@reduxjs/toolkit/dist/query'
+import teacherDataApi from '../services/teacherData'
 
 const store = configureStore({
     reducer: rootReducer,
@@ -12,6 +13,7 @@ const store = configureStore({
             .concat(keterlamabatanApi.middleware)
             .concat(dataSiswaApi.middleware)
             .concat(siswaAccountApi.middleware)
+            .concat(teacherDataApi.middleware)
     }
 })
 

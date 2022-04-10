@@ -13,7 +13,7 @@ import FormSecondaryCard from '../components/FormSecondaryCard'
 import { roleEnum } from './Signup'
 import styles from '../styles/Login'
 import { useDispatch, useSelector } from 'react-redux'
-import { signInGuru } from '../store/thunks/authThunk'
+import { signInGuru, signInSiswa } from '../store/thunks/authThunk'
 import auth from '../store/auth'
 import { RootState } from '../store/store'
 
@@ -47,11 +47,8 @@ const Login: React.FC = ({ navigation }) => {
     }
 
     const onLoginButtonPressed = async () => {
-        try {
-            if (role === roleEnum.guru) dispatch(signInGuru({ email: email, password: password }))
-        } catch (error) {
-
-        }
+        if (role === roleEnum.guru) dispatch(signInGuru({ email: email, password: password }))
+        else dispatch(signInSiswa({ email, password }))
     }
 
     useEffect(() => {
@@ -74,6 +71,7 @@ const Login: React.FC = ({ navigation }) => {
                         <Picker.Item label={'Guru'} value={roleEnum.guru} />
                     </CustomPicker>
                     <Input
+                        secureTextEntry={true}
                         hint={'Password Harus Memiliki Setidaknya 8 Huruf'}
                         placeholder={'Password'}
                         onChangeText={onPasswordChange}

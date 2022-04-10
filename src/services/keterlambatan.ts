@@ -35,8 +35,13 @@ const keterlambatan = createApi({
             query: () => `/keterlambatan`,
             providesTags: ['Post']
         }),
+        getKeterlambatanByName: builder.query<Keterlambatan[], string>({
+            query: (nama) => `/keterlambatan?nama=${nama}`,
+            providesTags: ['Post']
+        }),
         getKeterlambatanByNis: builder.query<Keterlambatan[], string>({
-            query: (nis) => `/keterlambatan?nis=${nis}`
+            query: (nis) => `/data-siswa/${nis}/keterlambatan`,
+            providesTags: ['Post']
         }),
         addKeterlambatan: builder.mutation<Keterlambatan, AddKeterlambatanBody>({
             query: param => ({
@@ -45,11 +50,10 @@ const keterlambatan = createApi({
                 body: param
             }),
             invalidatesTags: ['Post']
-        })
+        }),
     })
 })
 
-export const { useGetKeterlambatanQuery } = keterlambatan
-export const { useAddKeterlambatanMutation } = keterlambatan
+export const { useGetKeterlambatanQuery, useGetKeterlambatanByNameQuery, useGetKeterlambatanByNisQuery, useAddKeterlambatanMutation } = keterlambatan
 
 export default keterlambatan

@@ -15,7 +15,8 @@ const styles = StyleSheet.create({
     },
 
     textInput: {
-        fontSize: VAR.smallFontSize
+        fontSize: VAR.smallFontSize,
+        color: VAR.blackColor
     },
 
     hintText: {
