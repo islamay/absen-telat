@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios, { Axios, AxiosError } from 'axios';
 import backendApi, { RejectedResponse } from '../../api/backend';
 import { GuruRole, AccStatus } from '../../helpers/accountEnum';
 import * as SecureStorage from 'expo-secure-store'
@@ -89,7 +89,7 @@ export const signUpSiswa = createAsyncThunk(
     }
 )
 
-export const signInSiswa = createAsyncThunk(
+export const signInSiswa = createAsyncThunk<StudentAuthSuccess, SignInPayload, { rejectValue: { message: string } }>(
     'auth/signInSiswa',
     async (payload: SignInPayload, { rejectWithValue }) => {
         try {
@@ -100,7 +100,10 @@ export const signInSiswa = createAsyncThunk(
 
             return data
         } catch (error) {
-            return rejectWithValue('Cannot Login')
+            if (axios.isAxiosError(error)) {
+                return rejectWithValue({ message: error.response?.data.message })
+            }
+            return rejectWithValue({ message: 'Unexpected Error' })
         }
     }
 )

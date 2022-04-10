@@ -1,10 +1,11 @@
 import React from 'react'
-import { Modal, View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { Modal, View, TouchableOpacity, TouchableWithoutFeedback, StyleProp, ViewStyle } from 'react-native'
 import styles from '../styles/DefaultModal'
 
 export interface Props {
     visible: boolean,
-    closeModal: () => void
+    closeModal: () => void,
+    style?: StyleProp<ViewStyle>
 }
 
 export const Gap = () => {
@@ -13,7 +14,7 @@ export const Gap = () => {
     )
 }
 
-const AddKeterlambatanModal: React.FC<Props> = ({ visible, closeModal, children }) => {
+const AddKeterlambatanModal: React.FC<Props> = ({ visible, closeModal, children, style }) => {
 
     return (
         <Modal
@@ -23,7 +24,7 @@ const AddKeterlambatanModal: React.FC<Props> = ({ visible, closeModal, children 
         >
             <TouchableOpacity style={styles.centeredView} onPress={closeModal}>
                 <TouchableWithoutFeedback>
-                    <View style={styles.modalView}>
+                    <View style={[styles.modalView, style]}>
                         {children}
                     </View>
                 </TouchableWithoutFeedback>

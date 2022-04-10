@@ -40,7 +40,7 @@ const Login: React.FC = ({ navigation }) => {
     const createLoginErrorAlert = (title: string, message: string) => {
         Alert.alert(title, message, [
             {
-                text: 'Ulangi',
+                text: 'Ok',
                 onPress: () => { dispatch(auth.actions.hideError()) }
             }
         ])
@@ -52,7 +52,7 @@ const Login: React.FC = ({ navigation }) => {
     }
 
     useEffect(() => {
-        if (authState.isError && !authState.hideError) {
+        if (authState.isError) {
             createLoginErrorAlert('Login Gagal', authState.errorMessage)
         }
     }, [authState])

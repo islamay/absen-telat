@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, FlatList, ListRenderItem } from 'react-native'
 import LightBlueScreen from '../components/LightBlueScreen'
 import Input from '../components/Input'
@@ -7,10 +7,11 @@ import { useGetKeterlambatanQuery, Keterlambatan as IKeterlambatan } from '../se
 import DisplayKeterlambatan from '../components/DisplayKeterlambatan'
 import FloatingButton from '../components/FloatingButton'
 import { MaterialIcons } from '@expo/vector-icons'
+import DownloadKeterlambatanModal from '../components/DownloadKeterlambatanModal'
 import VAR from '../styles/VAR'
 
 const Keterlambatan = () => {
-
+    const [showDownloadModal, setShowDownloadModal] = useState(false)
     const { data, isError, isLoading, refetch } = useGetKeterlambatanQuery(null)
 
     const renderKeterlambatan: ListRenderItem<IKeterlambatan> = ({ item, index }) => {
@@ -21,17 +22,18 @@ const Keterlambatan = () => {
                 kelas='X RPL'
                 alasan={item.alasan}
                 isLast={data && data.length - 1 === index}
+                onPress={() => console.log('Pressed')}
             />
         )
     }
 
     const onDownloadButtonPress = () => {
-        console.log('pressed');
-
+        setShowDownloadModal(true)
     }
 
     return (
         <LightBlueScreen>
+            <DownloadKeterlambatanModal visible={showDownloadModal} closeModal={() => setShowDownloadModal(false)} />
             <View style={styles.searchContainer}>
                 <Input placeholder='Cari Siswa' />
             </View>

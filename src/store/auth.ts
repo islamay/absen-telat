@@ -74,8 +74,7 @@ const auth = createSlice({
             state.isLoading = false
             state.isError = true
             state.hideError = false
-            // @ts-ignore
-            state.errorMessage = action.payload.message || action.payload
+            state.errorMessage = action.error.message || 'Tidak Bisa Login'
         })
         builder.addCase(signUpSiswa.pending, (state, action) => {
             state.isLoading = true
@@ -88,7 +87,7 @@ const auth = createSlice({
             state.status = action.payload.status
         })
         builder.addCase(signUpSiswa.rejected, (state, action) => {
-            state.isLoading = true
+            state.isLoading = false
         })
         builder.addCase(signInSiswa.pending, (state, action) => {
             state.isLoading = true
@@ -101,7 +100,9 @@ const auth = createSlice({
             state.status = action.payload.status
         })
         builder.addCase(signInSiswa.rejected, (state, action) => {
-            state.isLoading = true
+            state.isLoading = false
+            state.isError = true
+            state.errorMessage = action.payload?.message || 'Unexpected error, try again later'
         })
         builder.addCase(signOut.fulfilled, (state, payload) => {
             state.isAuthenticated = false
