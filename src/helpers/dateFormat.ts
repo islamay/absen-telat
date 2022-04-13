@@ -1,11 +1,22 @@
 
+const format0x = (date: number) => {
+    if (date < 10) {
+        return `0${date}`
+    }
 
-const dateFormat = (date: Date) => {
+    return date
+}
+
+const dateFormat = (date: Date, toClient: boolean) => {
     const year = date.getFullYear()
-    const month = date.getMonth()
-    const days = date.getDay()
+    let month: number | string = date.getMonth()
+    let days: number | string = date.getDate()
 
-    return `${days}-${month}-${year}`
+    if (toClient) return `${format0x(days)}-${format0x(month + 1)}-${year}`
+    else {
+        return `${year}-${format0x(month)}-${format0x(days)}`
+    }
+
 
 }
 
