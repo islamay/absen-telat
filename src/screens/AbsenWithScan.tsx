@@ -7,7 +7,9 @@ const AbsenWithScan = () => {
 
     return (
         <LightBlueScreen>
-            <Text>Absen With Scan</Text>
+            <View style={styles.container}>
+                <Text>...</Text>
+            </View>
         </LightBlueScreen>
     )
 }
