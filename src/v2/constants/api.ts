@@ -1,4 +1,8 @@
 
 
-export const backend_url = '10.10.5.156:5000'
+export const backend_url = 'http://192.168.1.14:5000'
 
+export interface ErrorResponse {
+    name: string,
+    message: string
+}

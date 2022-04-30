@@ -1,29 +1,46 @@
 import React, { useState } from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import Classic, { ClassicBodyContents, ClassicBodyHeader } from '../layout/Classic'
 import { FontAwesome } from '@expo/vector-icons'
 import styleGuide from '../constants/styleGuide'
 import Typography from '../components/Typography'
 import DatePicker from '../components/DatePicker'
 import useCurrentDate from '../hooks/useCurrentDate'
-import Card from '../components/Card'
 import { DisplayLateForPersonal } from '../components/Late'
-import { NativeStackScreenProps, NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { StudentLateStackParamList } from '../types/navigation'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { StudentHomeStackParamList } from '../navigation/StudentHome'
+import { StudentStackParamList } from '../navigation/Student'
+import { ILateness, useGetLatenessByNisQuery } from '../services/lateness'
+import { useAppSelector } from '../hooks/redux'
+import { FlatList } from 'react-native-gesture-handler'
+import { ActivityIndicator } from 'react-native-paper'
+import { CompositeScreenProps } from '@react-navigation/native'
+import { MaterialBottomTabScreenProps } from '@react-navigation/material-bottom-tabs'
 
-export type PersonalLateScreenProps = NativeStackScreenProps<StudentLateStackParamList, 'LateHome'>
+export type PersonalLateScreenProps = CompositeScreenProps<
+    NativeStackScreenProps<StudentStackParamList, 'HomeStack'>,
+    MaterialBottomTabScreenProps<StudentHomeStackParamList, 'Late'>
+>
 
 interface Props extends PersonalLateScreenProps {
 
 }
 
 const PersonalLate: React.FC<Props> = ({ navigation }) => {
+    const student = useAppSelector(state => state.student)
+    const [page, setPage] = useState(1)
     const { year, month, setYear, setMonth } = useCurrentDate()
+    const { data, isLoading } = useGetLatenessByNisQuery({ nis: student.nis, page: page, limit: 1000, year, month })
 
-    const onLateButtonPressed = (date: Date) => {
+    const onLateButtonPressed = (lateness: ILateness) => {
         return () => {
-            navigation.navigate('LateDetail', { date })
+            navigation.push('LatenessDetail', lateness)
         }
+    }
+
+    navigation
+
+    const onFlatListReachEnd = () => {
     }
 
     return (
@@ -43,32 +60,28 @@ const PersonalLate: React.FC<Props> = ({ navigation }) => {
                     setMonth={setMonth}
                 />
             </ClassicBodyHeader>
-            <ClassicBodyContents>
-                <DisplayLateForPersonal
-                    date={new Date(2022, 3, 21)}
-                    isWarning={false}
-                    onPress={onLateButtonPressed(new Date(2022, 3, 21))}
+            <ClassicBodyContents withScrollView={false}>
+                <FlatList
+                    style={{ flex: 1 }}
+                    data={data}
+                    keyExtractor={item => item._id}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ padding: 20 }}
+                    onEndReached={onFlatListReachEnd}
+                    renderItem={({ item }) => {
+                        return (
+                            <DisplayLateForPersonal
+                                key={item._id}
+                                date={new Date(item.date)}
+                                isWarning={!item.alasan}
+                                onPress={onLateButtonPressed(item)}
+                            />
+                        )
+                    }}
                 />
-                <DisplayLateForPersonal
-                    date={new Date(2022, 3, 11)}
-                    isWarning={false}
-                    onPress={onLateButtonPressed(new Date(2022, 3, 21))}
-                />
-                <DisplayLateForPersonal
-                    date={new Date(2022, 1, 16)}
-                    isWarning={true}
-                />
-                <DisplayLateForPersonal
-                    date={new Date(2022, 1, 6)}
-                    isWarning={false}
-                    onPress={onLateButtonPressed(new Date(2022, 3, 21))}
-                />
-                <DisplayLateForPersonal
-                    date={new Date(2022, 1, 5)}
-                    isWarning={false}
-                    onPress={onLateButtonPressed(new Date(2022, 3, 21))}
-
-                />
+                {
+                    isLoading && <ActivityIndicator size={52} />
+                }
             </ClassicBodyContents>
 
         </Classic>

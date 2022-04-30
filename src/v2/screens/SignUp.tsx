@@ -8,21 +8,34 @@ import textInputHandler from '../utils/textInputHandler'
 import StyleGuide from '../constants/styleGuide'
 import Button from '../components/Button'
 import { Link } from '@react-navigation/native'
+import { useAppDispatch, useAppSelector } from '../hooks/redux'
+import { studentSignUp } from '../redux/authThunk'
+import AuthModal, { useAuthModal } from '../components/AuthModal'
 
 const SignUp = () => {
+    const { isLoading, isError, errorMessage } = useAppSelector(state => state.auth)
+    const dispatch = useAppDispatch()
     const [nis, setNis] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirmation, setPasswordConfirmation] = useState('')
+    const [authModalVisible, handleCloseAuthModal] = useAuthModal()
 
     const handleSignup = () => {
-
+        dispatch(studentSignUp({ nis, email, password }))
     }
 
     return (
         <Clean>
             <Centerized>
                 <View style={styles.container}>
+                    <AuthModal
+                        visible={authModalVisible}
+                        closeModal={handleCloseAuthModal}
+                        errorMessage={errorMessage}
+                        isError={isError}
+                        isLoading={isLoading}
+                    />
                     <Typography type='title' style={styles.headerText}>Selamat Datang</Typography>
                     <Typography style={styles.headerText}>Silahkan Daftar</Typography>
                     <View style={styles.inputsContainer}>

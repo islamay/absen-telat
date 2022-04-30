@@ -7,14 +7,16 @@ import Typography from '../components/Typography'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Card from '../components/Card'
 import { MaterialBottomTabScreenProps } from '@react-navigation/material-bottom-tabs'
-import { TeacherStackParamList } from '../types/navigation'
+import { CompositeScreenProps } from '@react-navigation/native'
+import { TeacherHomeStackParamList } from '../navigation/TeacherHome'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { InsertLatenessParamList } from '../navigation/InsertLateness'
+import { TeacherStackParamList } from '../navigation/Teacher'
 
-type Props = MaterialBottomTabScreenProps<TeacherStackParamList, 'TeacherHome'>
-
-const TeacherHome: React.FC<Props> = ({ navigation }) => {
+const TeacherHome: React.FC = ({ navigation }) => {
 
     const handleManualMethodButton = () => {
-
+        navigation.push('InsertLateness')
     }
 
     const handleScanMethodButton = () => {

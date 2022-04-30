@@ -1,12 +1,13 @@
-import { StyleSheet, View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import MyAccountDetail from '../screens/MyAccountDetail'
+import NonCollapsable from '../components/NonCollapsable'
 
 const MyAccountStack = createNativeStackNavigator()
 
 const MyAccount = () => {
     return (
-        <View style={styles.container} collapsable={false}>
+        <NonCollapsable>
+
             <MyAccountStack.Navigator initialRouteName='Detail'>
                 <MyAccountStack.Screen
                     name='Detail'
@@ -14,14 +15,8 @@ const MyAccount = () => {
                     options={{ headerShown: false }}
                 />
             </MyAccountStack.Navigator>
-        </View>
+        </NonCollapsable>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    }
-})
 
 export default MyAccount

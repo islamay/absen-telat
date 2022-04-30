@@ -7,13 +7,14 @@ interface Props {
     style?: StyleProp<ViewStyle>,
     textStyle?: StyleProp<TextStyle>,
     onPress?: () => void,
+    disabled?: boolean
 }
 
-const Button: React.FC<Props> = ({ children, style, onPress, textStyle }) => {
+const Button: React.FC<Props> = ({ children, style, onPress, textStyle, disabled }) => {
 
     return (
         <View style={[styles.container, style]}>
-            <TouchableOpacity onPress={onPress}>
+            <TouchableOpacity onPress={onPress} disabled={disabled}>
                 <Typography style={[styles.textStyle, textStyle]}>{children}</Typography>
             </TouchableOpacity>
         </View>

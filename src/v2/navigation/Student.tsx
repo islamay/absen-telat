@@ -1,68 +1,24 @@
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
+import { MaterialBottomTabNavigationProp } from '@react-navigation/material-bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { useRoute } from '@react-navigation/native'
-import StudentHome from '../screens/StudentHome'
-import styleGuide from '../constants/styleGuide'
-import { StyleSheet } from 'react-native'
-import { FontAwesome } from '@expo/vector-icons'
-import MyAccount from './MyAccount'
-import StudentLate from './StudentLate'
-import PersonalLate from '../screens/PersonalLate'
+import PersonalLateDetail from '../screens/PersonalLateDetail'
+import { ILateness } from '../services/lateness'
+import StudentHome, { StudentHomeStackParamList } from './StudentHome'
 
 export type StudentStackParamList = {
-    Home: undefined,
-    LateStack: undefined,
-    MyAccount: undefined
+    HomeStack: MaterialBottomTabNavigationProp<StudentHomeStackParamList>
+    LatenessDetail: ILateness
 }
 
-const StudentStack = createMaterialBottomTabNavigator<StudentStackParamList>()
+const StudentStack = createNativeStackNavigator<StudentStackParamList>()
+const Student = () => {
 
-const StudentScreen = () => {
-    const route = useRoute()
 
     return (
-        <StudentStack.Navigator
-            barStyle={{ ...StudentBottomTabStyle.barStyle, display: route.name === 'LateDetail' ? 'none' : 'flex' }}
-            labeled={false}
-            activeColor={styleGuide.colorSecondary}
-            inactiveColor={styleGuide.colorLightGray}
-        >
-            <StudentStack.Screen
-                name='Home'
-                component={StudentHome}
-                options={{
-                    tabBarIcon: ({ color, focused }) => {
-                        return <FontAwesome size={24} name='home' color={color} />
-                    },
-                }}
-            />
-            <StudentStack.Screen
-                name='LateStack'
-                component={PersonalLate}
-                options={{
-                    tabBarIcon: ({ color, focused }) => {
-                        return <FontAwesome size={24} name='file' color={color} />
-                    },
-                }}
-            />
-            <StudentStack.Screen
-                name='MyAccount'
-                component={MyAccount}
-                options={{
-                    tabBarIcon: ({ color }) => {
-                        return <FontAwesome size={24} name='user' color={color} />
-                    }
-                }}
-            />
+        <StudentStack.Navigator initialRouteName='HomeStack' screenOptions={{ headerShown: false }}>
+            <StudentStack.Screen name='HomeStack' component={StudentHome} />
+            <StudentStack.Screen name='LatenessDetail' component={PersonalLateDetail} options={{ animation: 'slide_from_right' }} />
         </StudentStack.Navigator>
     )
 }
 
-const StudentBottomTabStyle = StyleSheet.create({
-    barStyle: {
-        backgroundColor: styleGuide.colorWhite,
-        ...styleGuide.shadow
-    }
-})
-
-export default StudentScreen
+export default Student

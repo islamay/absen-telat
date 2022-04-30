@@ -19,6 +19,7 @@ const getDayInMonth = (year: number, month: number) => {
 }
 
 const DatePicker: React.FC<Props> = ({ choose, year, month, date, setYear, setMonth, setDate }) => {
+
     const currentDateRef = useRef(new Date())
 
     const avaibleDay = useMemo(() => {
@@ -73,7 +74,7 @@ const DatePicker: React.FC<Props> = ({ choose, year, month, date, setYear, setMo
                         selectedValue={date}
                         mode={'dropdown'}
                         style={[styles.basePicker, styles.dPicker, pickerWidthStyle]}
-                        onValueChange={handleChange(setDate)}
+                        onValueChange={handleChange(setDate ? setDate : () => { })}
                     >
                         {
                             [...Array(avaibleDay)].map((v, i) => {

@@ -8,8 +8,10 @@ import Card from '../components/Card'
 import QRCode from 'react-native-qrcode-svg'
 import TextInput, { textInputTheme } from '../components/TextInput'
 import { Theme } from 'react-native-paper/lib/typescript/types'
+import { useAppSelector } from '../hooks/redux'
 
 const StudentHome = () => {
+    const student = useAppSelector(state => state.student)
 
     return (
         <Classic
@@ -33,14 +35,14 @@ const StudentHome = () => {
                         editable={false}
                         mode='outlined'
                         label='Nama'
-                        value='Dean Prayoga Islamay'
+                        value={student.name}
                         theme={customInputTheme}
                     />
                     <TextInput
                         editable={false}
                         mode='outlined'
                         label='Kelas'
-                        value='X RPL'
+                        value={student.fullClass}
                         theme={customInputTheme}
                     />
                 </View>

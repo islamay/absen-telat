@@ -26,14 +26,23 @@ export const ClassicBodyHeader: React.FC = ({ children }) => {
     )
 }
 
-export const ClassicBodyContents: React.FC = ({ children }) => {
-    return (
-        <View style={styles.bodyContentContainer}>
-            <ScrollView contentContainerStyle={styles.bodyScrollContainer} showsVerticalScrollIndicator={false}>
-                {children}
-            </ScrollView>
-        </View>
+interface ClassicBodyContentsProps {
+    withScrollView?: boolean
+}
 
+export const ClassicBodyContents: React.FC<ClassicBodyContentsProps> = ({ children, withScrollView = true }) => {
+    return (
+        <>
+            {
+                withScrollView
+                    ?
+                    <View style={styles.bodyContentContainer}>
+                        <ScrollView contentContainerStyle={styles.bodyScrollContainer} showsVerticalScrollIndicator={false} children={children} />
+                    </View>
+                    : children
+            }
+
+        </>
     )
 }
 

@@ -5,9 +5,11 @@ import { restoreAuth } from './src/store/thunks/authThunk'
 import 'react-native-gesture-handler'
 import InitialLoading from './src/screens/InitialLoading'
 import RootStackScreens from './src/navigation/RootStack'
+import { Provider as ReduxProvider } from 'react-redux'
 // V2
 import Root from './src/v2/navigation/Root'
 import useInitialize from './src/v2/hooks/useInitialize'
+import store from './src/v2/redux/store'
 
 // export default function App() {
 //   const { auth } = useSelector((state: RootState) => state)
@@ -37,6 +39,8 @@ export default function App() {
 
 
   return (
-    <Root />
+    <ReduxProvider store={store}>
+      <Root />
+    </ReduxProvider>
   );
 }
