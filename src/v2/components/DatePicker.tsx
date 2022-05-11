@@ -3,36 +3,46 @@ import { StyleSheet, View } from 'react-native'
 import Typography from './Typography'
 import { Picker } from '@react-native-picker/picker'
 import styleGuide from '../constants/styleGuide'
+import { endOfMonth } from '../utils/date'
 
 interface Props {
-    choose: 'month' | 'day',
+    choose: 'month' | 'week' | 'day',
     year: number,
     month: number,
-    date?: number,
+    week: number,
+    date: number,
     setYear: Dispatch<SetStateAction<number>>,
     setMonth: Dispatch<SetStateAction<number>>,
-    setDate?: Dispatch<SetStateAction<number>>,
+    setWeek: Dispatch<SetStateAction<number>>,
+    setDate: Dispatch<SetStateAction<number>>,
 }
 
 const getDayInMonth = (year: number, month: number) => {
-    return new Date(year, month, 0).getDate()
+    return new Date(year, month + 1, 0).getDate()
 }
 
-const DatePicker: React.FC<Props> = ({ choose, year, month, date, setYear, setMonth, setDate }) => {
+const DatePicker: React.FC<Props> = ({ choose, year, month, week, date, setYear, setMonth, setWeek, setDate }) => {
 
     const currentDateRef = useRef(new Date())
 
+
     const avaibleDay = useMemo(() => {
         return getDayInMonth(year, month)
-    }, [month])
+    }, [month, year])
 
-    const pickerWidthStyle = choose === 'day' ? styles.threeWidth : styles.twoWidth
+    const avaibleWeek = Math.ceil(avaibleDay / 7)
+
+    const pickerWidthStyle = (choose === 'day' || choose === 'week') ? styles.threeWidth : styles.twoWidth
 
     const handleChange = (setState: Dispatch<SetStateAction<number>>) => {
         return (v: number) => {
             setState(v)
         }
     }
+
+    console.log('Choose : ', choose);
+    console.log(choose === 'week');
+
 
 
     return (
@@ -69,12 +79,28 @@ const DatePicker: React.FC<Props> = ({ choose, year, month, date, setYear, setMo
                     }
                 </Picker>
                 {
+                    choose === 'week' &&
+                    <Picker
+                        selectedValue={week}
+                        mode={'dropdown'}
+                        style={[styles.basePicker, styles.dPicker, pickerWidthStyle]}
+                        onValueChange={handleChange(setWeek)}
+                    >
+                        {
+                            [...Array(avaibleWeek)].map((v, i) => {
+                                const week = i + 1
+                                return <Picker.Item key={v} label={'Minggu ' + week} value={week} />
+                            })
+                        }
+                    </Picker>
+                }
+                {
                     choose === 'day' &&
                     <Picker
                         selectedValue={date}
                         mode={'dropdown'}
                         style={[styles.basePicker, styles.dPicker, pickerWidthStyle]}
-                        onValueChange={handleChange(setDate ? setDate : () => { })}
+                        onValueChange={handleChange(setDate)}
                     >
                         {
                             [...Array(avaibleDay)].map((v, i) => {
@@ -84,6 +110,7 @@ const DatePicker: React.FC<Props> = ({ choose, year, month, date, setYear, setMo
                         }
                     </Picker>
                 }
+
 
             </View>
         </View>

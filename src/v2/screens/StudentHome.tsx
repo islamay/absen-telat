@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { View, StyleSheet } from 'react-native'
 import Classic, { ClassicBodyHeader, ClassicBodyContents } from '../layout/Classic'
 import { FontAwesome } from '@expo/vector-icons'
@@ -26,7 +26,7 @@ const StudentHome = () => {
             <ClassicBodyContents>
                 <Card style={styles.customCard}>
                     <QRCode
-                        value='sfkokoaksofkOSKDoiaskSKDopakdAOSDAPOKSPOKSADkzlldklksSAOKKASoidk)XkokcokxOASIFJOIJSAFIjkxmmfO)ISJAoia'
+                        value={student.nis}
                         size={160}
                     />
                 </Card>

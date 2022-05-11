@@ -1,27 +1,39 @@
+import { FontAwesome } from '@expo/vector-icons'
+import { MaterialBottomTabScreenProps } from '@react-navigation/material-bottom-tabs'
+import { CompositeScreenProps } from '@react-navigation/native'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View, StyleSheet } from 'react-native'
+import { Theme } from 'react-native-paper/lib/typescript/types'
 import Typography from '../components/Typography'
 import styleGuide from '../constants/styleGuide'
 import Classic, { ClassicBodyContents, ClassicBodyHeader } from '../layout/Classic'
-import { FontAwesome } from '@expo/vector-icons'
+import type { TeacherStackParamList } from '../navigation/Teacher'
+import type { TeacherHomeStackParamList } from '../navigation/TeacherHome'
 import TextInput, { textInputTheme } from '../components/TextInput'
-import { Theme } from 'react-native-paper/lib/typescript/types'
-import Button from '../components/Button'
-import { useAppSelector } from '../hooks/redux'
 import AuthModal from '../components/AuthModal'
-import { useStudentSignOutMutation } from '../services/student'
+import { useAppSelector } from '../hooks/redux'
+import { useTeacherSignOutMutation } from '../services/teacher'
+import Button from '../components/Button'
 
-const MyAccountDetail = () => {
+type ScreenProps = CompositeScreenProps<
+    NativeStackScreenProps<TeacherStackParamList, 'HomeStack'>,
+    MaterialBottomTabScreenProps<TeacherHomeStackParamList, 'Profile'>
+>
+
+const TeacherProfile: React.FC<ScreenProps> = ({ navigation }) => {
     const [errorMessage, setErrorMessage] = useState('')
-    const student = useAppSelector(state => state.student)
-    const [signout, { isLoading, isSuccess, isError }] = useStudentSignOutMutation()
+    const teacher = useAppSelector(state => state.teacher)
+    const [signout, { isLoading, isSuccess, isError }] = useTeacherSignOutMutation()
 
-    const handleSignOut = async () => {
+    const handleSignout = async () => {
         try {
             signout()
         } catch (error: any) {
-            if (!!error.status && !!error.data) {
+            if (!!error.status && !!error.data && !!error.data.message) {
                 setErrorMessage(error.data.message)
+            } else {
+                setErrorMessage('Penyebab tidak diketahui. coba lagi atau buka ulang aplikasi')
             }
         }
     }
@@ -41,7 +53,8 @@ const MyAccountDetail = () => {
             <Classic
                 header={{
                     title: 'Akun Saya',
-                    icon: <FontAwesome size={96} name='user' color={styleGuide.colorSecondary} />
+                    icon: <FontAwesome size={96} name='user' color={styleGuide.colorSecondary} />,
+                    navigation: navigation
                 }}
             >
                 <ClassicBodyHeader>
@@ -51,30 +64,30 @@ const MyAccountDetail = () => {
                     <View style={styles.container}>
                         <TextInput
                             mode='outlined'
-                            label='Nis'
-                            value={student.nis}
-                            editable={false}
-                            theme={customTextInputTheme}
-                            style={styles.textInput}
-                        />
-                        <TextInput
-                            mode='outlined'
                             label='Nama'
-                            value={student.name}
+                            value={teacher.nama}
                             editable={false}
                             theme={customTextInputTheme}
                             style={[styles.textInput]}
                         />
                         <TextInput
                             mode='outlined'
-                            label='Kelas'
-                            value={student.fullClass}
+                            label='Email'
+                            value={teacher.email}
                             editable={false}
                             theme={customTextInputTheme}
-                            style={styles.textInput}
+                            style={[styles.textInput]}
+                        />
+                        <TextInput
+                            mode='outlined'
+                            label='Role'
+                            value={teacher.role}
+                            editable={false}
+                            theme={customTextInputTheme}
+                            style={[styles.textInput]}
                         />
 
-                        <Button style={styles.logoutButton} onPress={handleSignOut}>Logout</Button>
+                        <Button style={styles.logoutButton} onPress={handleSignout}>Logout</Button>
                     </View>
                 </ClassicBodyContents>
             </Classic>
@@ -109,4 +122,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default MyAccountDetail
+export default TeacherProfile

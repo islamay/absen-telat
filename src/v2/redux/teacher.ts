@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { AccountStatus, TeacherRole } from '../constants/account'
+import { teacherAuthSuccess, teacherSignout } from './authAction'
 import { teacherSignIn } from './authThunk'
 
 interface TeacherState {
@@ -23,11 +24,17 @@ const teacherSlice = createSlice({
 
     },
     extraReducers: builder => {
-        builder.addCase(teacherSignIn.fulfilled, (state, action) => {
+        builder.addCase(teacherAuthSuccess, (state, action) => {
             state.nama = action.payload.guru.nama
+            state.role = action.payload.guru.role
             state.email = action.payload.guru.email
             state.status = action.payload.guru.status
-            state.role = action.payload.guru.role
+        })
+        builder.addCase(teacherSignout, (state) => {
+            state.nama = ''
+            state.email = ''
+            state.status = ''
+            state.role = ''
         })
     }
 

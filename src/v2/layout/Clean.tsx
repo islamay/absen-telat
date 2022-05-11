@@ -37,7 +37,7 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({ children, title, withB
 const Clean: React.FC<Props> = ({ children, scrollable }) => {
 
     if (scrollable) return (
-        <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+        <KeyboardAwareScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
             {children}
         </KeyboardAwareScrollView>
     )

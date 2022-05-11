@@ -8,8 +8,12 @@ import textInputHandler from '../utils/textInputHandler'
 import Button from '../components/Button'
 import styleGuide from '../constants/styleGuide'
 import { Link } from '@react-navigation/native'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { PublicStackParamList } from '../navigation/Public'
 
-const ForgetPassword: React.FC = () => {
+type ScreenProps = NativeStackScreenProps<PublicStackParamList, 'ForgetPassword'>
+
+const ForgetPassword: React.FC<ScreenProps> = ({ navigation }) => {
     const [email, setEmail] = useState('')
 
     const handleSendVerification = () => {
@@ -18,6 +22,14 @@ const ForgetPassword: React.FC = () => {
 
     const handleBack = () => {
 
+    }
+
+    const goBackToLogin = () => {
+        navigation.navigate('StudentSignIn')
+    }
+
+    const goToSignup = () => {
+        navigation.navigate('SignUp')
     }
 
     return (
@@ -35,8 +47,10 @@ const ForgetPassword: React.FC = () => {
                         />
                     </View>
                     <Button onPress={handleSendVerification} style={styles.footerButton}>Kirim Kode Verifikasi</Button>
-                    <Button onPress={handleBack} style={[styles.footerButton, styles.backButtonStyle]} textStyle={styles.backButtonTextStyle}>Kembali ke Halaman Login</Button>
-                    <Typography style={styles.footerText} >Belum memiliki akun? <Link to={{ screen: 'SignUp' }} style={styles.footerLink}>Daftar</Link></Typography>
+                    <Button onPress={goBackToLogin} style={[styles.footerButton, styles.backButtonStyle]} textStyle={styles.backButtonTextStyle}>Kembali ke Halaman Login</Button>
+                    <Typography type='body' style={styles.footerText} >Belum memiliki akun?
+                        <Typography type='body' style={styles.footerLink} onPress={goToSignup}>&nbsp;Daftar</Typography>
+                    </Typography>
                 </View>
             </Centerized>
         </Clean>

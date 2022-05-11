@@ -15,3 +15,9 @@ export enum AccountStatus {
     NONAKTIF = 'NONAKTIF',
     TIDAK_ADA = 'TIDAK_ADA'
 }
+
+export enum EditableAccountStatus {
+    AKTIF = 'AKTIF',
+    MENUNGGU = 'MENUNGGU',
+    NONAKTIF = 'NONAKTIF',
+}

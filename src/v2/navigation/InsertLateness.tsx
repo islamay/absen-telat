@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import InsertLatenessScreen from '../screens/ManualInsert'
+import ScanLateness from '../screens/ScanLateness';
 
 export type InsertLatenessParamList = {
     Manual: undefined,
@@ -14,6 +15,10 @@ const InsertLateness = () => {
             <InsertLatenessStack.Screen
                 name='Manual'
                 component={InsertLatenessScreen}
+            />
+            <InsertLatenessStack.Screen
+                name='Scan'
+                component={ScanLateness}
             />
         </InsertLatenessStack.Navigator>
     )

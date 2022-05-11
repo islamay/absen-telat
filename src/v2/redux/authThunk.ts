@@ -59,7 +59,7 @@ export const studentSignUp = createAsyncThunk<void, SignUpPayload, { rejectValue
     async (payload, { rejectWithValue }) => {
         try {
             const { email = '', nis = '', password = '' } = payload
-            const signignUp = axios.post<void>(backend_url + '/siswa/signup', { email, password })
+            const signignUp = axios.post<void>(backend_url + '/siswa/signup', { nis, email, password })
             await sleep(1000)
             await signignUp
             return;

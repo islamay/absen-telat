@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { studentSignIn, studentSignOut } from './authThunk'
+import { studentAuthSuccess, studentSignout } from './authAction'
 
 interface Student {
     nis: string | '',
@@ -20,23 +20,17 @@ const studentSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: builder => {
-        builder.addCase(studentSignIn.fulfilled, (state, action) => {
+        builder.addCase(studentAuthSuccess, (state, action) => {
             state.nis = action.payload.siswa.nis
             state.name = action.payload.siswa.namaLengkap
-            state.fullClass = action.payload.siswa.fullClass
             state.email = action.payload.siswa.account.email
+            state.fullClass = action.payload.siswa.fullClass
         })
-        builder.addCase(studentSignOut.fulfilled, (state) => {
+        builder.addCase(studentSignout, (state, action) => {
             state.nis = ''
             state.name = ''
-            state.fullClass = ''
             state.email = ''
-        })
-        builder.addCase(studentSignOut.rejected, (state) => {
-            state.nis = ''
-            state.name = ''
             state.fullClass = ''
-            state.email = ''
         })
     }
 })

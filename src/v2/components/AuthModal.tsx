@@ -1,51 +1,59 @@
-import React, { useState, useEffect, Dispatch } from 'react'
+import React, { useState, useEffect, Dispatch, useMemo } from 'react'
 import styleGuide from '../constants/styleGuide'
-import Modal, { Props as ModalProps } from './Modal'
+import Modal from './Modal'
 import { StyleSheet, View, ActivityIndicator } from 'react-native'
 import Typography from './Typography'
-import { useAppDispatch, useAppSelector } from '../hooks/redux'
-import { resetAuthError } from '../redux/auth'
 
-interface Props extends Omit<ModalProps, 'dismissable'> {
+interface Props {
+    isSuccess: boolean,
     isLoading: boolean,
     isError: boolean,
-    errorMessage: string
+    errorTitle: string,
+    errorMessage: string,
+    displaySuccess: boolean,
+    successTitle: string
+    successMessage: string
 }
-export const useAuthModal = (): [boolean, () => void] => {
-    const { isError, isLoading } = useAppSelector(state => state.auth)
-    const [authModalVisible, setAuthModalVisible] = useState(false)
 
-    const handleCloseAuthModal = () => {
-        setAuthModalVisible(false)
+const AuthModal: React.FC<Props> = ({ errorTitle, isLoading, isError, errorMessage, isSuccess, successMessage, displaySuccess, successTitle }) => {
+    const [visible, setVisible] = useState(false)
+
+    const closeModal = () => {
+        setVisible(false)
+    }
+
+    const closeModalAndCleanup = () => {
+        closeModal()
     }
 
     useEffect(() => {
-        if (isLoading || isError) {
-            setAuthModalVisible(true)
+        if (isSuccess && displaySuccess) {
+            setVisible(true)
+        } else if (isLoading && !isSuccess) {
+            setVisible(true)
+        } else if (isError && !isSuccess) {
+            setVisible(true)
+        } else if (!isLoading && !isError) {
+            setVisible(false)
         }
-    }, [isLoading])
-
-    return [authModalVisible, handleCloseAuthModal]
-}
-
-const AuthModal: React.FC<Props> = ({ closeModal, visible, isLoading, isError, errorMessage }) => {
-    const dispatch = useAppDispatch()
-
-
-
-    const closeModalAndCleanup = () => {
-        dispatch(resetAuthError())
-        closeModal()
-    }
+    }, [isLoading, isError, isSuccess])
 
     return (
         <Modal closeModal={closeModal} visible={visible} dismissable={false}>
             {isLoading && <ActivityIndicator size={24} color={styleGuide.colorGray} />}
             {isError &&
                 <View style={styles.container}>
-                    <Typography type='body' font='Roboto' style={styles.errorTitle}>Gagal SignIn</Typography>
+                    <Typography type='body' font='Roboto' style={styles.errorTitle}>{errorTitle}</Typography>
                     <Typography type='tiny' style={styles.errorBody}>{errorMessage}</Typography>
                     <Typography type='body' onPress={closeModalAndCleanup} style={styles.errorExit}>Coba Lagi</Typography>
+                </View>
+            }
+            {
+                isSuccess &&
+                <View style={styles.container}>
+                    <Typography type='body' font='Roboto' style={styles.errorTitle}>{successTitle}</Typography>
+                    <Typography type='tiny' style={styles.errorBody}>{successMessage}</Typography>
+                    <Typography type='body' onPress={closeModalAndCleanup} style={styles.errorExit}>Ok</Typography>
                 </View>
             }
         </Modal>

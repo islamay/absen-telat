@@ -1,7 +1,10 @@
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import styleGuide from '../constants/styleGuide'
+import { TeacherStackParamList } from '../navigation/Teacher'
 import Card from './Card'
 import Typography from './Typography'
 
@@ -13,6 +16,11 @@ interface Props {
 }
 
 const StudentCard: React.FC<Props> = ({ nis, name, fullClass, onCardPress }) => {
+    const navigation = useNavigation<NativeStackNavigationProp<TeacherStackParamList>>()
+
+    const onNextPress = () => {
+        navigation.push('StudentDetail', { nis })
+    }
 
     return (
         <Card style={styles.cardStyle}>
@@ -22,7 +30,9 @@ const StudentCard: React.FC<Props> = ({ nis, name, fullClass, onCardPress }) => 
                     <Typography style={styles.text}>{fullClass}</Typography>
                 </View>
             </TouchableOpacity>
-            <FontAwesome name='angle-right' size={styleGuide.fontBig + 6} color={styleGuide.colorTertiary} style={styles.icon} />
+            <TouchableOpacity onPress={onNextPress} style={styles.icon}>
+                <FontAwesome name='angle-right' size={styleGuide.fontBig + 6} color={styleGuide.colorTertiary} />
+            </TouchableOpacity>
         </Card>
     )
 }

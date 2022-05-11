@@ -7,14 +7,17 @@ export interface ILateness {
     nis: string,
     guruId: string,
     date: string,
-    alasan: string
+    alasan: Purposes
 }
 
 export enum Purposes {
     TidakAda = 'Tidak ada',
-    BangunTerlambat = 'Bangun terlambat',
     Macet = 'Macet',
-    MotorMogok = 'Motor Mogok'
+    Hujan = 'Hujan',
+    KeDokter = 'Ke dokter',
+    BanBocor = 'Ban bocor',
+    BangunKesiangan = 'Bangun kesiangan',
+    MengantarAdikSekolah = 'Mengantar adik ke sekolah',
 }
 
 const latenessApi = createApi({
@@ -29,18 +32,27 @@ const latenessApi = createApi({
     }),
     tagTypes: ['Lateness'],
     endpoints: builder => ({
-        getLatenessByNis: builder.query<ILateness[], { nis: string, page?: number, limit?: number, year: number, month: number }>({
-            query: ({ nis, limit = 5, page = 1, month, year }) => `/${nis}?tahun=${year}&bulan=${month}&limit=${limit}&page=${page}`,
+        getLatenesses: builder.query<{ keterlambatan: ILateness[] }, { start: string, end: string }>({
+            query: ({ start, end }) => `?start=${start}&end=${end}`,
             providesTags: ['Lateness']
         }),
-        postLateness: builder.mutation<ILateness, { nis: string }>({
-            query: ({ nis }) => ({
+        getLatenessById: builder.query<ILateness, string>({
+            query: (id) => `/${id}`,
+            providesTags: ['Lateness']
+        }),
+        getLatenessByNis: builder.query<ILateness[], { nis: string, page?: number, limit?: number, year: number, month: number }>({
+            query: ({ nis, limit = 5, page = 1, month, year }) => `/nis/${nis}?tahun=${year}&bulan=${month}&limit=${limit}&page=${page}`,
+            providesTags: ['Lateness']
+        }),
+        postLateness: builder.mutation<ILateness, { nis: string, purpose: Purposes }>({
+            query: ({ nis, purpose }) => ({
                 url: '/',
                 method: 'POST',
-                body: { nis }
-            })
+                body: { nis, purpose },
+            }),
+            invalidatesTags: ['Lateness']
         }),
-        patchLatenessPurposeByIdP: builder.mutation<ILateness, { id: string, purpose: string }>({
+        patchLatenessPurposeById: builder.mutation<ILateness, { id: string, purpose: string }>({
             query: ({ id, purpose }) => ({
                 url: `/${id}`,
                 method: 'PATCH',
@@ -51,5 +63,11 @@ const latenessApi = createApi({
     }),
 })
 
-export const { useGetLatenessByNisQuery, useLazyGetLatenessByNisQuery, usePatchLatenessPurposeByIdPMutation, usePostLatenessMutation } = latenessApi
+export const {
+    useGetLatenessesQuery,
+    useGetLatenessByIdQuery,
+    useGetLatenessByNisQuery,
+    useLazyGetLatenessByNisQuery,
+    usePatchLatenessPurposeByIdMutation,
+    usePostLatenessMutation, } = latenessApi
 export default latenessApi 

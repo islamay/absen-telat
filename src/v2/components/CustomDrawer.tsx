@@ -1,23 +1,24 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
-import { StyleSheet, View } from 'react-native'
 import Typography from './Typography'
+import { StyleSheet, View, Text, StyleProp, ViewStyle } from 'react-native'
+import styleGuide from '../constants/styleGuide'
+import React, { useCallback, useMemo, useState } from 'react'
+import { useAppSelector } from '../hooks/redux'
+import { useTeacherSignOutMutation } from '../services/teacher'
+import { FontAwesome, FontAwesome5, MaterialIcons } from '@expo/vector-icons'
 import { DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer'
 import type { TeacherHomeStackParamList } from '../navigation/TeacherHome'
-import { FontAwesome, FontAwesome5, MaterialIcons } from '@expo/vector-icons'
-import styleGuide from '../constants/styleGuide'
-import { useAppDispatch, useAppSelector } from '../hooks/redux'
-import { teacherSignOut } from '../redux/authThunk'
 
 interface Props extends DrawerContentComponentProps { }
 
 interface CustomDrawerItemProps {
-    label: string,
+    label: string | ((props: { focused: boolean, color: string }) => React.ReactNode),
     onPress?: () => void,
     focused?: boolean,
-    icon?: ({ }: { focused: boolean }) => React.ReactNode
+    icon?: ({ }: { focused: boolean }) => React.ReactNode,
+    style?: StyleProp<ViewStyle>
 }
 
-const CustomDrawerItem: React.FC<CustomDrawerItemProps> = ({ label, onPress = () => { }, focused, icon }) => {
+const CustomDrawerItem: React.FC<CustomDrawerItemProps> = ({ label, onPress = () => { }, focused, icon, style }) => {
 
     return (
         <DrawerItem
@@ -27,18 +28,44 @@ const CustomDrawerItem: React.FC<CustomDrawerItemProps> = ({ label, onPress = ()
             focused={focused}
             icon={icon}
             labelStyle={styles.label}
+            style={style}
         />
     )
 }
 
 const CustomDrawer: React.FC<Props> = (props) => {
-    const { teacher, auth } = useAppSelector(state => state)
-    const dispatch = useAppDispatch()
+    const { teacher } = useAppSelector(state => state)
+    const [signout] = useTeacherSignOutMutation()
+    const [nestedDrawerVisible, setNestedDrawerVisible] = useState(false)
+
+    const closeNestedDrawer = () => {
+        setNestedDrawerVisible(false)
+    }
+    const openNestedDrawer = () => {
+        setNestedDrawerVisible(true)
+    }
     const focusedScreen = useMemo(() => props.state.routeNames[props.state.index], [props.state.index])
-    const isFocused = useCallback((routeName: string) => {
+
+    const isFocused = useCallback((routeName: keyof TeacherHomeStackParamList | 'nestedDrawerParent') => {
         if (focusedScreen === routeName) return true
+        else if (routeName === 'nestedDrawerParent' && nestedDrawerVisible) return true
         else return false
-    }, [props.state.index])
+    }, [props.state.index, nestedDrawerVisible])
+
+    const goTo = useMemo(() => {
+        return {
+            home: () => props.navigation.navigate('Home'),
+            studentData: () => props.navigation.navigate('StudentData'),
+            teacherData: () => props.navigation.navigate('TeacherData'),
+            Statistic: () => props.navigation.navigate('Statistic'),
+            profile: () => props.navigation.navigate('Profile'),
+            latenessStatistic: () => props.navigation.navigate('LatenessStatistic'),
+            violationStatistic: () => props.navigation.navigate('ViolationStatistic')
+        }
+    }, [])
+
+    console.log(nestedDrawerVisible)
+
 
     return (
         <View style={styles.container}>
@@ -55,14 +82,14 @@ const CustomDrawer: React.FC<Props> = (props) => {
                         return <FontAwesome name='home' size={styleGuide.fontBig} style={{ width: 32 }} color={focused ? styleGuide.colorTertiary : styleGuide.colorGray} />
                     }}
                     focused={isFocused('Home')}
-                    onPress={() => props.navigation.navigate('Home')}
+                    onPress={goTo.home}
                 />
                 <CustomDrawerItem
                     label='Data Siswa'
                     icon={({ focused }) => {
                         return <FontAwesome5 name='user-friends' size={styleGuide.fontBig} style={{ width: 32 }} color={focused ? styleGuide.colorTertiary : styleGuide.colorGray} />
                     }}
-                    onPress={() => props.navigation.navigate('StudentData')}
+                    onPress={goTo.studentData}
                     focused={isFocused('StudentData')}
                 />
                 <CustomDrawerItem
@@ -70,22 +97,52 @@ const CustomDrawer: React.FC<Props> = (props) => {
                     icon={({ focused }) => {
                         return <FontAwesome5 name='user-tie' size={styleGuide.fontBig} style={{ width: 32 }} color={focused ? styleGuide.colorTertiary : styleGuide.colorGray} />
                     }}
-                    onPress={() => props.navigation.navigate('TeacherData')}
+                    onPress={goTo.teacherData}
                     focused={isFocused('TeacherData')}
                 />
                 <CustomDrawerItem
-                    label='Statistik'
                     icon={({ focused }) => {
-                        return <FontAwesome name='bar-chart' size={styleGuide.fontBig} style={{ width: 32 }} color={focused ? styleGuide.colorTertiary : styleGuide.colorGray} />
+                        return <FontAwesome name='bar-chart' size={styleGuide.fontBig} style={{ width: 32 }} color={styleGuide.colorGray} />
                     }}
-                    onPress={() => props.navigation.navigate('Statistic')}
-                    focused={isFocused('Statistic')}
+                    onPress={!nestedDrawerVisible ? openNestedDrawer : closeNestedDrawer}
+                    label={({ color }) => (
+                        <View style={styles.nestedDrawerLabelContainer}>
+                            <Text style={[{ color }, styles.container]}>Statistik</Text>
+                            <FontAwesome name={nestedDrawerVisible ? 'angle-up' : 'angle-down'} color={color} size={styleGuide.fontBig} />
+                        </View>
+                    )}
                 />
+                {
+                    nestedDrawerVisible && (
+                        <>
+                            <CustomDrawerItem
+                                label='Keterlambatan'
+                                style={styles.nestedDrawer}
+                                icon={({ focused }) => {
+                                    return <FontAwesome name='bar-chart' size={styleGuide.fontBig} style={{ width: 32 }} color={focused ? styleGuide.colorTertiary : styleGuide.colorGray} />
+                                }}
+                                focused={isFocused('LatenessStatistic')}
+                                onPress={goTo.latenessStatistic}
+                            />
+                            <CustomDrawerItem
+                                label='Pelanggaran'
+                                style={styles.nestedDrawer}
+                                icon={({ focused }) => {
+                                    return <FontAwesome name='bar-chart' size={styleGuide.fontBig} style={{ width: 32 }} color={focused ? styleGuide.colorTertiary : styleGuide.colorGray} />
+                                }}
+                                focused={isFocused('ViolationStatistic')}
+                                onPress={goTo.violationStatistic}
+                            />
+                        </>
+                    )
+                }
                 <CustomDrawerItem
                     label='Akun'
+                    onPress={goTo.profile}
                     icon={({ focused }) => {
                         return <FontAwesome name='user' size={styleGuide.fontBig} style={{ width: 32 }} color={focused ? styleGuide.colorTertiary : styleGuide.colorGray} />
                     }}
+                    focused={isFocused('Profile')}
                 />
             </DrawerContentScrollView>
             <DrawerItem
@@ -93,7 +150,7 @@ const CustomDrawer: React.FC<Props> = (props) => {
                 icon={({ focused }) => {
                     return <MaterialIcons name='logout' size={styleGuide.fontBig} style={{ width: 32 }} color={focused ? styleGuide.colorTertiary : styleGuide.colorGray} />
                 }}
-                onPress={() => { dispatch(teacherSignOut()) }}
+                onPress={signout}
             />
 
         </View>
@@ -127,6 +184,14 @@ const styles = StyleSheet.create({
     },
     label: {
         marginLeft: -20
+    },
+    nestedDrawerLabelContainer: {
+        marginLeft: -20,
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    nestedDrawer: {
+        marginLeft: '10%'
     }
 })
 

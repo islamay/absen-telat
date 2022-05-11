@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
         backgroundColor: styleGuide.colorWhite,
         paddingVertical: 20,
         paddingHorizontal: 60,
-        borderRadius: 20
+        borderRadius: 20,
 
     }
 })

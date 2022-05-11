@@ -18,6 +18,7 @@ import { FontAwesome } from '@expo/vector-icons'
 import StudentCard from '../components/StudentCard'
 import AddLatenessModal from '../components/AddLatenessModal'
 import sleep from '../utils/sleep'
+import useSearchStudent from '../hooks/useSearchStudent'
 
 
 type ScreenProps = CompositeScreenProps<
@@ -27,30 +28,13 @@ type ScreenProps = CompositeScreenProps<
 
 const InsertLateness: React.FC<ScreenProps> = ({ navigation }) => {
     const [query, setQuery] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
-    const [students, setStudents] = useState<Student[]>()
-    const [fetchStudents] = useLazyGetStudentsByNameQuery()
     const [selectedStudent, setSelectedStudent] = useState({ nis: '', nama: '', kelas: '' })
     const [addLatenessModalVisible, setAddLatenessModalVisible] = useState(false)
-
-
-
+    const { students, isLoading } = useSearchStudent(query)
 
     const closeModal = () => {
         setAddLatenessModalVisible(false)
     }
-
-    useDebounce(() => {
-        if (query) (async () => {
-            setIsLoading(true)
-            const fetching = fetchStudents({ name: query })
-            await sleep(500)
-            const response = await fetching
-            setIsLoading(false)
-            setStudents(response.data)
-        })()
-    }, 500, [query])
-
 
     return (
         <Clean scrollable={false}>
@@ -61,13 +45,7 @@ const InsertLateness: React.FC<ScreenProps> = ({ navigation }) => {
 
             </CleanHeader>
             <View style={styles.container}>
-                <AddLatenessModal
-                    visible={addLatenessModalVisible}
-                    closeModal={closeModal}
-                    nis={selectedStudent.nis}
-                    name={selectedStudent.nama}
-                    fullClass={selectedStudent.kelas}
-                />
+
                 <TextInput
                     mode='outlined'
                     value={query}
@@ -78,10 +56,17 @@ const InsertLateness: React.FC<ScreenProps> = ({ navigation }) => {
                     isLoading &&
                     <ActivityIndicator style={styles.spinner} size={styleGuide.fontBig} color={styleGuide.colorGray} />
                 }
+                {
+                    students && (students.length > 0 ? <Typography type='body' style={styles.foundedText}>
+                        Ditemukan <Typography type='body' style={styles.foundedNum}>{students.length}</Typography>
+                    </Typography> : <Typography type='body' style={styles.foundedText}>Siswa tidak ditemukan</Typography>)
+                }
                 <FlatList
                     contentContainerStyle={styles.listContainer}
                     data={students}
-                    keyExtractor={v => v._id}
+                    keyExtractor={v => {
+                        return v._id
+                    }}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => {
                         return (
@@ -99,6 +84,13 @@ const InsertLateness: React.FC<ScreenProps> = ({ navigation }) => {
                     }}
                 />
             </View>
+            <AddLatenessModal
+                visible={addLatenessModalVisible}
+                closeModal={closeModal}
+                nis={selectedStudent.nis}
+                name={selectedStudent.nama}
+                fullClass={selectedStudent.kelas}
+            />
         </Clean>
     )
 }
@@ -106,13 +98,22 @@ const InsertLateness: React.FC<ScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 30,
-        marginTop: -40
+        marginTop: -40,
+        flex: 1
     },
     spinner: {
         marginVertical: 20
     },
     listContainer: {
-        marginTop: 20
+        marginTop: 20,
+        paddingBottom: 40,
+        flexGrow: 1
+    },
+    foundedText: {
+        marginTop: 10
+    },
+    foundedNum: {
+        color: styleGuide.colorTertiary
     }
 })
 

@@ -10,19 +10,36 @@ import Button from '../components/Button'
 import { Link } from '@react-navigation/native'
 import { useAppDispatch, useAppSelector } from '../hooks/redux'
 import { studentSignUp } from '../redux/authThunk'
-import AuthModal, { useAuthModal } from '../components/AuthModal'
+import AuthModal from '../components/AuthModal'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { PublicStackParamList } from '../navigation/Public'
+import { useStudentSignUpMutation } from '../services/student'
 
-const SignUp = () => {
-    const { isLoading, isError, errorMessage } = useAppSelector(state => state.auth)
-    const dispatch = useAppDispatch()
+type ScreenProps = NativeStackScreenProps<PublicStackParamList>;
+
+const SignUp: React.FC<ScreenProps> = ({ navigation }) => {
     const [nis, setNis] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirmation, setPasswordConfirmation] = useState('')
-    const [authModalVisible, handleCloseAuthModal] = useAuthModal()
+    const isInputValid = !!nis && !!email && !!password && !!passwordConfirmation && password === passwordConfirmation
+    const [signUp, { isError, isLoading, isSuccess }] = useStudentSignUpMutation()
+    const [errorMessage, setErrorMessage] = useState('')
 
-    const handleSignup = () => {
-        dispatch(studentSignUp({ nis, email, password }))
+    const handleSignup = async () => {
+        try {
+            const signingUp = signUp({ nis, email, password }).unwrap()
+            await signingUp
+        } catch (error: any) {
+            if (error.status && error.data) {
+                setErrorMessage(error.data.message)
+            }
+            console.log(error);
+        }
+    }
+
+    const goBackToLogin = () => {
+        navigation.navigate('StudentSignIn')
     }
 
     return (
@@ -30,11 +47,14 @@ const SignUp = () => {
             <Centerized>
                 <View style={styles.container}>
                     <AuthModal
-                        visible={authModalVisible}
-                        closeModal={handleCloseAuthModal}
-                        errorMessage={errorMessage}
-                        isError={isError}
                         isLoading={isLoading}
+                        isError={isError}
+                        errorMessage={errorMessage}
+                        displaySuccess={true}
+                        errorTitle={'Gagal mendaftar'}
+                        isSuccess={isSuccess}
+                        successTitle={'berhasil mendaftar'}
+                        successMessage={'Berhasil membuat akun, hubungi admin untuk mengaktifakan'}
                     />
                     <Typography type='title' style={styles.headerText}>Selamat Datang</Typography>
                     <Typography style={styles.headerText}>Silahkan Daftar</Typography>
@@ -55,17 +75,21 @@ const SignUp = () => {
                             mode='outlined'
                             label='Password'
                             value={password}
+                            secureTextEntry={true}
                             onChangeText={textInputHandler(setPassword)}
                         />
                         <TextInput
                             mode='outlined'
                             label='Konfirmasi Password'
                             value={passwordConfirmation}
+                            secureTextEntry={true}
                             onChangeText={textInputHandler(setPasswordConfirmation)}
                         />
                     </View>
-                    <Button onPress={handleSignup} style={styles.signUpBotton}>Daftar</Button>
-                    <Typography style={styles.footerText}>Sudah Memiliki Akun? <Link to={{ screen: 'SignIn' }} style={styles.footerLinkText}>Masuk</Link></Typography>
+                    <Button disabled={!isInputValid} onPress={handleSignup} style={styles.signUpBotton}>Daftar</Button>
+                    <Typography style={styles.footerText}>Sudah memiliki akun?
+                        <Typography style={styles.footerLinkText} onPress={goBackToLogin}>&nbsp;Masuk</Typography>
+                    </Typography>
                 </View>
             </Centerized>
         </Clean>

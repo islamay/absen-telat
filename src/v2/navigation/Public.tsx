@@ -3,11 +3,12 @@ import { AccountType } from '../constants/account'
 import ForgetPassword from '../screens/ForgetPassword'
 import SignIn from '../screens/SignIn'
 import SignUp from '../screens/SignUp'
+import StudentSignIn from '../screens/StudentSignIn'
+import TeacherSignIn from '../screens/TeacherSignIn'
 
 export type PublicStackParamList = {
-    SignIn: {
-        as: AccountType
-    },
+    StudentSignIn: undefined,
+    TeacherSignIn: undefined,
     SignUp: undefined,
     ForgetPassword: undefined
 }
@@ -17,8 +18,9 @@ const PublicStack = createNativeStackNavigator<PublicStackParamList>()
 const Public = () => {
 
     return (
-        <PublicStack.Navigator screenOptions={{ headerShown: false }}>
-            <PublicStack.Screen name='SignIn' initialParams={{ as: AccountType.SISWA }} component={SignIn} />
+        <PublicStack.Navigator screenOptions={{ headerShown: false }} initialRouteName='TeacherSignIn'>
+            <PublicStack.Screen name='TeacherSignIn' component={TeacherSignIn} />
+            <PublicStack.Screen name='StudentSignIn' component={StudentSignIn} />
             <PublicStack.Screen name='SignUp' component={SignUp} />
             <PublicStack.Screen name='ForgetPassword' component={ForgetPassword} />
         </PublicStack.Navigator>

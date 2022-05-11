@@ -13,7 +13,7 @@ interface Props {
 const Button: React.FC<Props> = ({ children, style, onPress, textStyle, disabled }) => {
 
     return (
-        <View style={[styles.container, style]}>
+        <View style={[styles.container, style, disabled && styles.containerDisabled]}>
             <TouchableOpacity onPress={onPress} disabled={disabled}>
                 <Typography style={[styles.textStyle, textStyle]}>{children}</Typography>
             </TouchableOpacity>
@@ -34,6 +34,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: styleGuide.colorWhite,
         textAlign: 'center'
+    },
+    containerDisabled: {
+        opacity: .7
     }
 })
 

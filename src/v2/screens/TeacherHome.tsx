@@ -12,15 +12,25 @@ import { TeacherHomeStackParamList } from '../navigation/TeacherHome'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { InsertLatenessParamList } from '../navigation/InsertLateness'
 import { TeacherStackParamList } from '../navigation/Teacher'
+import { DrawerScreenProps } from '@react-navigation/drawer'
 
-const TeacherHome: React.FC = ({ navigation }) => {
+type ScreenProps = CompositeScreenProps<
+    NativeStackScreenProps<TeacherStackParamList, 'HomeStack'>,
+    DrawerScreenProps<TeacherHomeStackParamList, 'Home'>
+>
+
+const TeacherHome: React.FC<ScreenProps> = ({ navigation }) => {
 
     const handleManualMethodButton = () => {
-        navigation.push('InsertLateness')
+        navigation.navigate('InsertLateness', {
+            screen: 'Manual'
+        })
     }
 
     const handleScanMethodButton = () => {
-
+        navigation.navigate('InsertLateness', {
+            screen: 'Scan'
+        })
     }
 
     return (
@@ -36,13 +46,13 @@ const TeacherHome: React.FC = ({ navigation }) => {
             </ClassicBodyHeader>
             <ClassicBodyContents>
                 <View style={styles.container}>
-                    <Card >
+                    <Card style={styles.buttonContainer} >
                         <TouchableOpacity onPress={handleManualMethodButton} style={styles.methodButton}>
                             <FontAwesome size={24} name='pencil' color={styleGuide.colorTertiary} style={styles.methodButtonIcon} />
                             <Typography style={styles.methodButtonText}>Manual</Typography>
                         </TouchableOpacity>
                     </Card>
-                    <Card >
+                    <Card style={styles.buttonContainer} >
                         <TouchableOpacity onPress={handleScanMethodButton} style={styles.methodButton}>
                             <FontAwesome size={24} name='camera' color={styleGuide.colorTertiary} style={styles.methodButtonIcon} />
                             <Typography style={styles.methodButtonText}>Scan</Typography>
@@ -57,14 +67,18 @@ const TeacherHome: React.FC = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
+        flexWrap: 'wrap'
+    },
+    buttonContainer: {
+        marginVertical: 5
     },
     methodButton: {
         width: 150,
         height: 150,
         alignItems: 'center',
         justifyContent: 'center',
-        color: styleGuide.colorTertiary
+        color: styleGuide.colorTertiary,
     },
     methodButtonIcon: {
         alignSelf: 'center'

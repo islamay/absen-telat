@@ -5,6 +5,7 @@ import latenessApi from '../services/lateness'
 import { setupListeners } from '@reduxjs/toolkit/dist/query'
 import teacherSlice from './teacher'
 import studentApi from '../services/student'
+import teacherApi from '../services/teacher'
 
 const rootReducer = combineReducers({
     'auth': authSlice.reducer,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
     'teacher': teacherSlice.reducer,
     [studentApi.reducerPath]: studentApi.reducer,
     [latenessApi.reducerPath]: latenessApi.reducer,
+    [teacherApi.reducerPath]: teacherApi.reducer
 })
 
 const store = configureStore({
@@ -20,6 +22,7 @@ const store = configureStore({
         return getDefaultMiddleware()
             .concat(studentApi.middleware)
             .concat(latenessApi.middleware)
+            .concat(teacherApi.middleware)
     }
 })
 

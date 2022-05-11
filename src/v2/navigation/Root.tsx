@@ -13,6 +13,8 @@ const RootStack = createNativeStackNavigator()
 
 const Root = () => {
     const auth = useSelector((state: RootState) => state.auth)
+    console.log(auth);
+
 
     return (
         <NavigationContainer>

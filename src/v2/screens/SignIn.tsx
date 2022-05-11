@@ -23,8 +23,8 @@ const SignIn: React.FC<ScreenProps> = () => {
     const [modalVisible, setModalVisible] = useState(false)
     const [signInAsStudent, toggle] = useToggle(true)
     const auth = useAppSelector(state => state.auth)
+    const [authState, setAuthState] = useState(auth)
     const dispatch = useAppDispatch()
-
 
     const loginHandler = () => {
         if (signInAsStudent) {
@@ -35,10 +35,14 @@ const SignIn: React.FC<ScreenProps> = () => {
     }
 
     useEffect(() => {
-        if (auth.isLoading || auth.isError) {
+        setAuthState(auth)
+    }, [auth])
+
+    useEffect(() => {
+        if (authState.isLoading || authState.isError) {
             setModalVisible(true)
         }
-    }, [auth.isLoading])
+    }, [authState.isLoading])
 
     useEffect(() => {
         setEmail('')
@@ -51,9 +55,9 @@ const SignIn: React.FC<ScreenProps> = () => {
                 <AuthModal
                     visible={modalVisible}
                     closeModal={() => setModalVisible(false)}
-                    isLoading={auth.isLoading}
-                    isError={auth.isError}
-                    errorMessage={auth.errorMessage}
+                    isLoading={authState.isLoading}
+                    isError={authState.isError}
+                    errorMessage={authState.errorMessage}
                 />
                 <Centerized>
                     <Typography type='title' style={styles.headerText}>Selamat Datang</Typography>

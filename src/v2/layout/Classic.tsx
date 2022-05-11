@@ -60,11 +60,13 @@ const Classic: React.FC<Props> = ({ header, children, }) => {
                                 <TouchableOpacity onPress={() => { header.navigation?.dispatch(DrawerActions.openDrawer()) }}>
                                     <FontAwesome name='bars' size={32} color={styleGuide.colorWhite} />
                                 </TouchableOpacity>
-                                <Typography type='title' style={[styles.headerTitle, { marginLeft: 10 }]}>{header.title}</Typography>
+                                <View style={styles.titleContainer}>
+                                    <Typography type='title' style={[styles.headerTitle]}>{header.title}</Typography>
+                                    <Typography type='body' style={styles.headerSubtitle} >{header.subtitle}</Typography>
+                                </View>
                             </View>
                             : <Typography type='title' style={styles.headerTitle}>{header.title}</Typography>
                     }
-                    <Typography type='body' >{header.subtitle}</Typography>
                 </View>
                 {header.icon}
             </View>
@@ -92,7 +94,13 @@ const styles = StyleSheet.create({
     headerTitleContainer: {
         flexDirection: 'row'
     },
+    titleContainer: {
+        paddingLeft: 10
+    },
     headerTitle: {
+        color: styleGuide.colorWhite
+    },
+    headerSubtitle: {
         color: styleGuide.colorWhite
     },
     bodyContainer: {
