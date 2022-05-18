@@ -27,17 +27,23 @@ export const ClassicBodyHeader: React.FC = ({ children }) => {
 }
 
 interface ClassicBodyContentsProps {
-    withScrollView?: boolean
+    withScrollView?: boolean,
+    refreshControl?: any
 }
 
-export const ClassicBodyContents: React.FC<ClassicBodyContentsProps> = ({ children, withScrollView = true }) => {
+export const ClassicBodyContents: React.FC<ClassicBodyContentsProps> = ({ children, withScrollView = true, refreshControl }) => {
     return (
         <>
             {
                 withScrollView
                     ?
                     <View style={styles.bodyContentContainer}>
-                        <ScrollView contentContainerStyle={styles.bodyScrollContainer} showsVerticalScrollIndicator={false} children={children} />
+                        <ScrollView
+                            contentContainerStyle={styles.bodyScrollContainer}
+                            showsVerticalScrollIndicator={false}
+                            children={children}
+                            refreshControl={refreshControl}
+                        />
                     </View>
                     : children
             }

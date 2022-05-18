@@ -19,7 +19,11 @@ const useSearchStudent = (query: string) => {
         })()
     }, 200, [query])
 
-    return { isLoading, students }
+    const refetch = () => {
+        fetchStudent({ name: query })
+    }
+
+    return { isLoading, students, refetch }
 }
 
 export default useSearchStudent

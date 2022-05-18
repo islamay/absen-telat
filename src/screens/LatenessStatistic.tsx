@@ -3,7 +3,7 @@ import { DrawerScreenProps } from '@react-navigation/drawer'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState, useMemo } from 'react'
-import { StyleSheet, Touchable, View } from 'react-native'
+import { RefreshControl, StyleSheet, Touchable, View } from 'react-native'
 import { ActivityIndicator, FAB, Modal, Portal, Provider, RadioButton } from 'react-native-paper'
 import Card from '../components/Card'
 import DatePicker from '../components/DatePicker'
@@ -41,7 +41,7 @@ const LatenessStatistic: React.FC<ScreenProps> = ({ navigation }) => {
             end: endOfMonth(dateObject).toISOString().split('.')[0]
         }
     }, [dateObject])
-    const { data, isLoading, isSuccess, isError } = useGetLatenessesQuery({
+    const { data, isLoading, isSuccess, isError, refetch } = useGetLatenessesQuery({
         start: startAndEndDate.start,
         end: startAndEndDate.end
     })
@@ -144,7 +144,15 @@ const LatenessStatistic: React.FC<ScreenProps> = ({ navigation }) => {
                     />
                 </ClassicBodyHeader>
 
-                <ClassicBodyContents>
+                <ClassicBodyContents
+                    withScrollView={true}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={isLoading}
+                            onRefresh={refetch}
+                        />
+                    }
+                >
                     {
                         isLoading
                             ?

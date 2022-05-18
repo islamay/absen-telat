@@ -40,6 +40,7 @@ const studentApi = createApi({
         baseUrl: Constant.manifest?.extra?.backend_url + '/siswa',
         prepareHeaders: (headers, { getState }) => {
             const { auth } = getState() as RootState
+
             headers.append('authorization', 'Bearer ' + auth.token)
             return headers
         },
@@ -54,18 +55,23 @@ const studentApi = createApi({
             query: (nis) => `/${nis}`,
             providesTags: ['Student']
         }),
-        postStudent: builder.mutation<Student, { nis: string, name: string, grade: number, gradeNo: number, major: Majors, }>({
-            query: ({ nis, name, grade, gradeNo, major }) => ({
-                url: '',
-                method: 'POST',
-                body: {
+        postStudent: builder.mutation<Student, { nis: string, name: string, email?: string, grade: number, gradeNo: number, major: Majors, }>({
+            query: ({ nis, name, email, grade, gradeNo, major }) => {
+                const body = {
                     nis,
                     namaLengkap: name,
                     kelas: grade,
                     kelasNo: gradeNo,
                     jurusan: major
                 }
-            }),
+                if (body) Object.assign(body, { email })
+
+                return {
+                    url: '',
+                    method: 'POST',
+                    body: body
+                }
+            },
             invalidatesTags: ['Student']
         }),
         patchStudent: builder.mutation<Student, { nis: string, email?: string, status?: AccountStatus }>({
@@ -80,6 +86,38 @@ const studentApi = createApi({
                 }
             },
             invalidatesTags: ['Student']
+        }),
+        requestChangePassword: builder.mutation<{ message: 'Success' }, { email: string }>({
+            query: ({ email }) => {
+                return {
+                    url: '/request-change-password',
+                    method: 'POST',
+                    body: {
+                        email
+                    }
+                }
+            }
+        }),
+        changePassword: builder.mutation<{ siswa: Student, token: string }, {
+            id: string,
+            oldPassword: string,
+            newPassword: string
+        }>({
+            query: ({ id, oldPassword, newPassword }) => ({
+                url: '/' + id + '/password',
+                method: 'PUT',
+                body: {
+                    oldPassword,
+                    newPassword
+                }
+            }),
+            onQueryStarted: async (payload, { dispatch, queryFulfilled }) => {
+                try {
+                    const { data } = await queryFulfilled
+                    dispatch(studentAuthSuccess(data))
+                } catch (error) {
+                }
+            }
         }),
         studentSignIn: builder.mutation<{ siswa: Student } & { token: string }, { email: string, password: string }>({
             query: ({ email, password }) => ({
@@ -118,8 +156,8 @@ const studentApi = createApi({
             }),
             async onQueryStarted(payload, { dispatch, queryFulfilled }) {
                 try {
-                    await queryFulfilled
                     await SecureStorage.deleteItemAsync('student')
+                    await queryFulfilled
                     dispatch(studentSignout())
                 } catch (error) {
                     dispatch(studentSignout())
@@ -138,6 +176,8 @@ export const {
     usePatchStudentMutation,
     useStudentSignInMutation,
     useStudentSignUpMutation,
-    useStudentSignOutMutation
+    useStudentSignOutMutation,
+    useChangePasswordMutation,
+    useRequestChangePasswordMutation,
 } = studentApi
 export default studentApi

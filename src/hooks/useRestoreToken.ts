@@ -33,7 +33,7 @@ const restoreStudentData = async (): Promise<{ student: Student, token: string }
         const [savedData, token] = JSON.parse(result) as [Student, string]
         if (!savedData.nis) return false
         if (isInternetReachable) {
-            const student = await axios.get<Student>(Constant.manifest?.extra?.backend_url + '/siswa' + savedData.nis, { headers: { authorization: 'Bearer ' + token } })
+            const student = await axios.get<Student>(Constant.manifest?.extra?.backend_url + '/siswa/' + savedData.nis, { headers: { authorization: 'Bearer ' + token } })
             return { student: student.data, token };
         }
         return { student: savedData, token }

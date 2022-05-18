@@ -15,6 +15,7 @@ import AuthModal from '../components/AuthModal'
 import { useAppSelector } from '../hooks/redux'
 import { useTeacherSignOutMutation } from '../services/teacher'
 import Button from '../components/Button'
+import { AccountType } from '../constants/account'
 
 type ScreenProps = CompositeScreenProps<
     NativeStackScreenProps<TeacherStackParamList, 'HomeStack'>,
@@ -36,6 +37,12 @@ const TeacherProfile: React.FC<ScreenProps> = ({ navigation }) => {
                 setErrorMessage('Penyebab tidak diketahui. coba lagi atau buka ulang aplikasi')
             }
         }
+    }
+
+    const handleGoToChangePassword = () => {
+        navigation.navigate('ChangePassword', {
+            accountType: AccountType.GURU
+        })
     }
 
     return (
@@ -87,6 +94,13 @@ const TeacherProfile: React.FC<ScreenProps> = ({ navigation }) => {
                             style={[styles.textInput]}
                         />
 
+                        <Typography
+                            onPress={handleGoToChangePassword}
+                            style={styles.link}
+                        >
+                            Ganti password
+                        </Typography>
+
                         <Button style={styles.logoutButton} onPress={handleSignout}>Logout</Button>
                     </View>
                 </ClassicBodyContents>
@@ -99,7 +113,7 @@ const customTextInputTheme: Theme = {
     ...textInputTheme,
     colors: {
         ...textInputTheme.colors,
-        text: styleGuide.colorPrimary,
+        text: styleGuide.colorGray,
         placeholder: styleGuide.colorLightGray
     }
 }
@@ -119,6 +133,11 @@ const styles = StyleSheet.create({
         marginTop: 20,
         backgroundColor: styleGuide.colorDanger,
         width: 260
+    },
+    link: {
+        marginTop: 20,
+        textAlign: 'center',
+        color: styleGuide.colorTertiary
     }
 })
 

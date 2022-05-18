@@ -90,6 +90,7 @@ const AddStudentForm: React.FC = () => {
             const addingStudent = addStudent({
                 nis: newStudent.nis,
                 name: newStudent.name,
+                email: newStudent.email,
                 grade: newStudent.grade,
                 gradeNo: newStudent.gradeNo,
                 major: newStudent.major
@@ -129,6 +130,12 @@ const AddStudentForm: React.FC = () => {
                 mode='outlined'
                 value={newStudent.name}
                 onChangeText={textInputHandler(newStudent.setName)}
+            />
+            <TextInput
+                label='Email (opsional)'
+                mode='outlined'
+                value={newStudent.email}
+                onChangeText={textInputHandler(newStudent.setEmail)}
             />
             <Typography>Kelas</Typography>
             <Picker

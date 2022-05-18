@@ -34,6 +34,36 @@ const teacherApi = createApi({
             query: id => `/${id}`,
             providesTags: ['Teacher']
         }),
+        requestChangePassword: builder.mutation<{ message: string }, { email: string }>({
+            query: ({ email }) => ({
+                url: '/request-change-password',
+                method: 'POST',
+                body: {
+                    email
+                }
+            })
+        }),
+        changePassword: builder.mutation<{ guru: Teacher, token: string }, {
+            id: string,
+            oldPassword: string,
+            newPassword: string
+        }>({
+            query: ({ oldPassword, newPassword, id }) => ({
+                url: '/' + id + '/password',
+                method: 'PUT',
+                body: {
+                    oldPassword,
+                    newPassword
+                }
+            }),
+            onQueryStarted: async (payload, { dispatch, queryFulfilled }) => {
+                try {
+                    const { data } = await queryFulfilled
+                    dispatch(teacherAuthSuccess(data))
+                } catch (error) {
+                }
+            }
+        }),
         postTeacher: builder.mutation<Teacher, { name: string, email: string }>({
             query: ({ name, email }) => ({
                 url: '/',
@@ -103,7 +133,10 @@ export const {
     usePostTeacherMutation,
     usePatchTeacherMutation,
     useGetTeacherByIdQuery,
+    useGetTeachersByNameQuery,
     useTeacherSignInMutation,
-    useTeacherSignOutMutation
+    useTeacherSignOutMutation,
+    useChangePasswordMutation,
+    useRequestChangePasswordMutation
 } = teacherApi
 export default teacherApi

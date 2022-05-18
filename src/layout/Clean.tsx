@@ -8,7 +8,9 @@ import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 interface Props {
-    scrollable?: boolean
+    scrollable?: boolean,
+    refreshControl?: any,
+    header?: CleanHeaderProps
 }
 
 interface CleanHeaderProps {
@@ -34,12 +36,27 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({ children, title, withB
     )
 }
 
-const Clean: React.FC<Props> = ({ children, scrollable }) => {
+const Clean: React.FC<Props> = ({ children, scrollable, refreshControl, header }) => {
 
     if (scrollable) return (
-        <KeyboardAwareScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-            {children}
-        </KeyboardAwareScrollView>
+        <View style={styles.container}>
+            {
+                header && (
+                    <CleanHeader
+                        title={header.title}
+                        withBackButton={header.withBackButton}
+                    />
+                )
+            }
+            <KeyboardAwareScrollView
+                contentContainerStyle={styles.scrollableContainer}
+                showsVerticalScrollIndicator={false}
+                refreshControl={refreshControl}
+
+            >
+                {children}
+            </KeyboardAwareScrollView>
+        </View>
     )
 
     return (
@@ -54,6 +71,9 @@ const styles = StyleSheet.create({
         backgroundColor: styleGuide.colorWhite,
         flexGrow: 1,
         paddingTop: StatusBar.currentHeight
+    },
+    scrollableContainer: {
+        flexGrow: 1
     },
     header: {
         flexDirection: 'row',

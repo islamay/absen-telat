@@ -3,7 +3,7 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { DrawerScreenProps } from '@react-navigation/drawer'
 import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { FlatList, StyleSheet, View } from 'react-native'
+import { FlatList, RefreshControl, StyleSheet, View } from 'react-native'
 import { ActivityIndicator, Searchbar, FAB } from 'react-native-paper'
 import Typography from '../components/Typography'
 import styleGuide from '../constants/styleGuide'
@@ -36,7 +36,7 @@ const renderStudent = ({ item }: { item: Student }) => {
 const StudentData: React.FC<ScreenProps> = ({ navigation }) => {
     const { role } = useAppSelector(state => state.auth)
     const [query, setQuery] = useState('')
-    const { students, isLoading } = useSearchStudent(query)
+    const { students, isLoading, refetch } = useSearchStudent(query)
 
     const goToAddStudentScreen = () => {
         navigation.push('AddTeacherOrStudent', { type: AccountType.SISWA })
@@ -86,6 +86,12 @@ const StudentData: React.FC<ScreenProps> = ({ navigation }) => {
                                     return item._id
                                 }}
                                 renderItem={renderStudent}
+                                refreshControl={
+                                    <RefreshControl
+                                        refreshing={isLoading}
+                                        onRefresh={refetch}
+                                    />
+                                }
                             />
                     }
                 </View>

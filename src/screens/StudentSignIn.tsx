@@ -6,6 +6,7 @@ import Button from '../components/Button'
 import Centerized from '../components/Centerized'
 import TextInput from '../components/TextInput'
 import Typography from '../components/Typography'
+import { AccountType } from '../constants/account'
 import styleGuide from '../constants/styleGuide'
 import Clean from '../layout/Clean'
 import { PublicStackParamList } from '../navigation/Public'
@@ -21,11 +22,7 @@ const TeacherSignIn: React.FC<ScreenProps> = ({ navigation }) => {
     const [signin, { isLoading, isSuccess, isError }] = useStudentSignInMutation()
 
     const goToResetPassword = () => {
-        navigation.navigate('ForgetPassword')
-    }
-
-    const goToSignUp = () => {
-        navigation.navigate('SignUp')
+        navigation.navigate('RequestChangePassword', { accountType: AccountType.SISWA })
     }
 
     const goToTeacherSignIn = () => {
@@ -74,15 +71,13 @@ const TeacherSignIn: React.FC<ScreenProps> = ({ navigation }) => {
                         value={password}
                         label='Password'
                         onChangeText={textInputHandler(setPassword)}
+                        secureTextEntry={true}
                     />
                     <Button onPress={handleSignin} style={styles.button}>Masuk</Button>
                 </View>
                 <View style={styles.footer}>
                     <Typography type='body' style={styles.link} onPress={goToResetPassword}>Lupa password?</Typography>
                     <Typography type='body' style={styles.link} onPress={goToTeacherSignIn}>Login sebagai guru</Typography>
-                    <Typography type='body'>Belum punya akun?
-                        <Typography type='body' style={styles.link} onPress={goToSignUp}>&nbsp;Daftar</Typography>
-                    </Typography>
                 </View>
             </Centerized>
         </Clean>

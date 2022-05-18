@@ -6,6 +6,7 @@ import Button from '../components/Button'
 import Centerized from '../components/Centerized'
 import TextInput from '../components/TextInput'
 import Typography from '../components/Typography'
+import { AccountType } from '../constants/account'
 import styleGuide from '../constants/styleGuide'
 import Clean from '../layout/Clean'
 import { PublicStackParamList } from '../navigation/Public'
@@ -35,7 +36,7 @@ const TeacherSignIn: React.FC<ScreenProps> = ({ navigation }) => {
     }
 
     const goToResetPassword = () => {
-        navigation.navigate('ForgetPassword')
+        navigation.navigate('RequestChangePassword', { accountType: AccountType.GURU })
     }
 
     const goToStudentSignIn = () => {
@@ -70,6 +71,7 @@ const TeacherSignIn: React.FC<ScreenProps> = ({ navigation }) => {
                         mode='outlined'
                         value={password}
                         label='Password'
+                        secureTextEntry={true}
                         onChangeText={textInputHandler(setPassword)}
                     />
                     <Button onPress={handleAuthenticate} style={styles.button}>Masuk</Button>

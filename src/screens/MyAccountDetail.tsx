@@ -10,8 +10,19 @@ import Button from '../components/Button'
 import { useAppSelector } from '../hooks/redux'
 import AuthModal from '../components/AuthModal'
 import { useStudentSignOutMutation } from '../services/student'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { StudentStackParamList } from '../navigation/Student'
+import { CompositeScreenProps } from '@react-navigation/native'
+import { StudentHomeStackParamList } from '../navigation/StudentHome'
+import { MaterialBottomTabScreenProps } from '@react-navigation/material-bottom-tabs'
+import { AccountType } from '../constants/account'
 
-const MyAccountDetail = () => {
+type ScreenProps = CompositeScreenProps<
+    NativeStackScreenProps<StudentStackParamList, 'HomeStack'>,
+    MaterialBottomTabScreenProps<StudentHomeStackParamList, 'MyAccount'>
+>
+
+const MyAccountDetail: React.FC<ScreenProps> = ({ navigation }) => {
     const [errorMessage, setErrorMessage] = useState('')
     const student = useAppSelector(state => state.student)
     const [signout, { isLoading, isSuccess, isError }] = useStudentSignOutMutation()
@@ -24,6 +35,10 @@ const MyAccountDetail = () => {
                 setErrorMessage(error.data.message)
             }
         }
+    }
+
+    const goToChangePassword = () => {
+        navigation.navigate('ChangePassword', { accountType: AccountType.SISWA })
     }
 
     return (
@@ -73,6 +88,12 @@ const MyAccountDetail = () => {
                             theme={customTextInputTheme}
                             style={styles.textInput}
                         />
+                        <Typography
+                            style={styles.link}
+                            onPress={goToChangePassword}
+                        >
+                            Ganti password
+                        </Typography>
 
                         <Button style={styles.logoutButton} onPress={handleSignOut}>Logout</Button>
                     </View>
@@ -86,7 +107,7 @@ const customTextInputTheme: Theme = {
     ...textInputTheme,
     colors: {
         ...textInputTheme.colors,
-        text: styleGuide.colorPrimary,
+        text: styleGuide.colorGray,
         placeholder: styleGuide.colorLightGray
     }
 }
@@ -106,6 +127,10 @@ const styles = StyleSheet.create({
         marginTop: 20,
         backgroundColor: styleGuide.colorDanger,
         width: 260
+    },
+    link: {
+        color: styleGuide.colorTertiary,
+        marginTop: 10
     }
 })
 

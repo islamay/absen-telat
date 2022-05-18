@@ -20,17 +20,17 @@ export const DisplayLateForPersonal: React.FC<DisplayForPersonalProps> = ({ isWa
 
     return (
         <Card style={displayLateForPersonalStyles.container}>
-            <View>
-                <Typography type='body' style={displayLateForPersonalStyles.dateText}>{formattedStringDate}</Typography>
-                {
-                    isWarning &&
-                    <Typography type='tiny'>
-                        <FontAwesome color={styleGuide.colorWarning} name='exclamation-triangle' size={16} />
-                        &nbsp;Belum diberi alasan
-                    </Typography>
-                }
-            </View>
             <TouchableOpacity style={displayLateForPersonalStyles.detailButton} onPress={onPress}>
+                <View style={displayLateForPersonalStyles.bodyContainer}>
+                    <Typography type='body' style={displayLateForPersonalStyles.dateText}>{formattedStringDate}</Typography>
+                    {
+                        isWarning &&
+                        <Typography type='tiny'>
+                            <FontAwesome color={styleGuide.colorWarning} name='exclamation-triangle' size={16} />
+                            &nbsp;Belum diberi alasan
+                        </Typography>
+                    }
+                </View>
                 <FontAwesome size={24} name='angle-right' color={styleGuide.colorTertiary} />
             </TouchableOpacity>
         </Card>
@@ -44,6 +44,9 @@ const displayLateForPersonalStyles = StyleSheet.create({
         padding: 20,
         marginBottom: 20
     },
+    bodyContainer: {
+        flexGrow: 1
+    },
     dateText: {
         color: styleGuide.colorTertiary
     },
@@ -51,6 +54,7 @@ const displayLateForPersonalStyles = StyleSheet.create({
         marginTop: 5
     },
     detailButton: {
-        alignSelf: 'center'
+        flexDirection: 'row',
+        flexGrow: 1
     }
 })

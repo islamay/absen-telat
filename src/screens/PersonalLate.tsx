@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet } from 'react-native'
+import { RefreshControl, StyleSheet } from 'react-native'
 import Classic, { ClassicBodyContents, ClassicBodyHeader } from '../layout/Classic'
 import { FontAwesome } from '@expo/vector-icons'
 import styleGuide from '../constants/styleGuide'
@@ -28,19 +28,11 @@ interface Props extends PersonalLateScreenProps {
 
 const PersonalLate: React.FC<Props> = ({ navigation }) => {
     const student = useAppSelector(state => state.student)
-    const [page, setPage] = useState(1)
-    const { year, month, setYear, setMonth } = useCurrentDate()
-    const { data, isLoading } = useGetLatenessByNisQuery({ nis: student.nis, page: page, limit: 1000, year, month })
+    const { week, setWeek, year, setYear, month, setMonth, date, setDate } = useCurrentDate()
+    const { data, isLoading, refetch } = useGetLatenessByNisQuery({ nis: student.nis, page: 1, limit: 1000, year, month })
 
     const onLateButtonPressed = (lateness: ILateness) => {
-        return () => {
-            navigation.push('LatenessDetail', lateness)
-        }
-    }
-
-    navigation
-
-    const onFlatListReachEnd = () => {
+        return () => navigation.push('LatenessDetail', { id: lateness._id })
     }
 
     return (
@@ -54,9 +46,13 @@ const PersonalLate: React.FC<Props> = ({ navigation }) => {
                 <Typography type='title'>Pilih Bulan</Typography>
                 <DatePicker
                     choose='month'
+                    date={date}
                     year={year}
                     month={month}
+                    week={week}
+                    setDate={setDate}
                     setYear={setYear}
+                    setWeek={setWeek}
                     setMonth={setMonth}
                 />
             </ClassicBodyHeader>
@@ -66,8 +62,13 @@ const PersonalLate: React.FC<Props> = ({ navigation }) => {
                     data={data}
                     keyExtractor={item => item._id}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ padding: 20 }}
-                    onEndReached={onFlatListReachEnd}
+                    contentContainerStyle={styles.listContainer}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={isLoading}
+                            onRefresh={refetch}
+                        />
+                    }
                     renderItem={({ item }) => {
                         return (
                             <DisplayLateForPersonal
@@ -79,9 +80,6 @@ const PersonalLate: React.FC<Props> = ({ navigation }) => {
                         )
                     }}
                 />
-                {
-                    isLoading && <ActivityIndicator size={52} />
-                }
             </ClassicBodyContents>
 
         </Classic>
@@ -89,7 +87,9 @@ const PersonalLate: React.FC<Props> = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-
+    listContainer: {
+        padding: 20
+    }
 })
 
 export default PersonalLate

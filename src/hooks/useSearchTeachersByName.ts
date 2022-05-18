@@ -5,7 +5,7 @@ import { Teacher, useLazyGetTeachersByNameQuery } from '../services/teacher'
 
 
 const useSearchTeachersByName = (query: string) => {
-    const [fetchTeachers] = useLazyGetTeachersByNameQuery()
+    const [fetchTeachers, { }] = useLazyGetTeachersByNameQuery()
     const [isLoading, setIsLoading] = useState(false)
     const [teachers, setTeachers] = useState<Teacher[]>([])
 
@@ -20,7 +20,11 @@ const useSearchTeachersByName = (query: string) => {
         })()
     }, 200, [query])
 
-    return { isLoading, teachers }
+    const refetch = () => {
+        fetchTeachers({ name: query })
+    }
+
+    return { isLoading, teachers, refetch }
 }
 
 export default useSearchTeachersByName

@@ -3,6 +3,7 @@ import { NavigatorScreenParams } from '@react-navigation/native'
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { AccountType } from '../constants/account'
 import AddStudent from '../screens/AddTeacherOrStudent'
+import ChangePassword from '../screens/ChangePassword'
 import LatenessDetail from '../screens/LatenessDetail'
 import StudentDetail from '../screens/StudentDetail'
 import TeacherDetail from '../screens/TeacherDetail'
@@ -11,8 +12,8 @@ import TeacherHome, { TeacherHomeStackParamList } from './TeacherHome'
 
 export type TeacherStackParamList = {
     HomeStack: DrawerNavigationProp<TeacherHomeStackParamList>,
+    InsertLateness: NavigatorScreenParams<InsertLatenessParamList>,
     Detail: undefined,
-    InsertLateness: NavigatorScreenParams<InsertLatenessParamList>
     StudentDetail: {
         nis: string
     },
@@ -25,6 +26,9 @@ export type TeacherStackParamList = {
     },
     AddTeacherOrStudent: {
         type: AccountType
+    },
+    ChangePassword: {
+        accountType: AccountType
     }
 }
 
@@ -39,6 +43,7 @@ const Teacher = () => {
                 <TeacherStack.Screen name='AddTeacherOrStudent' component={AddStudent} />
                 <TeacherStack.Screen name='StudentDetail' component={StudentDetail} />
                 <TeacherStack.Screen name='TeacherDetail' component={TeacherDetail} />
+                <TeacherStack.Screen name='ChangePassword' component={ChangePassword} />
             </TeacherStack.Group>
         </TeacherStack.Navigator>
     )

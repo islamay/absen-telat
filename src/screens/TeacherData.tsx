@@ -3,7 +3,7 @@ import { DrawerScreenProps } from '@react-navigation/drawer'
 import { CompositeScreenProps, useNavigation } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { RefreshControl, StyleSheet, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { ActivityIndicator, Searchbar, FAB } from 'react-native-paper'
 import TeacherCard from '../components/TeacherCard'
@@ -40,7 +40,7 @@ const renderTeachers = ({ item }: { item: Teacher }) => {
 const TeacherData: React.FC<ScreenProps> = ({ navigation }) => {
     const { role } = useAppSelector(state => state.auth)
     const [query, setQuery] = useState('')
-    const { isLoading, teachers } = useSearchTeachersByName(query)
+    const { isLoading, teachers, refetch } = useSearchTeachersByName(query)
     const goToAddTeacherScreen = () => {
         navigation.push('AddTeacherOrStudent', { type: AccountType.GURU })
     }
@@ -70,6 +70,12 @@ const TeacherData: React.FC<ScreenProps> = ({ navigation }) => {
                             keyExtractor={item => item._id}
                             renderItem={renderTeachers}
                             contentContainerStyle={styles.teacherList}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={isLoading}
+                                    onRefresh={refetch}
+                                />
+                            }
                         />
 
                 }
