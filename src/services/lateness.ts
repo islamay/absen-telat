@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { backend_url } from '../constants/api'
 import type { RootState } from '../redux/store'
+import Constant from 'expo-constants'
 
 export interface ILateness {
     _id: string,
@@ -23,7 +23,7 @@ export enum Purposes {
 const latenessApi = createApi({
     reducerPath: 'latenessApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: backend_url + '/keterlambatan',
+        baseUrl: Constant.manifest?.extra?.backend_url + '/keterlambatan',
         prepareHeaders: (headers, { getState }) => {
             const { auth } = getState() as RootState
             headers.append('authorization', 'Bearer ' + auth.token)

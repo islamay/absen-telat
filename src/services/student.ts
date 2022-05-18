@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
 import { AccountStatus } from '../constants/account'
-import { backend_url } from '../constants/api'
+import Constant from 'expo-constants'
 import { studentAuthSuccess, studentSignout } from '../redux/authAction'
 import type { RootState } from '../redux/store'
 import * as SecureStorage from 'expo-secure-store'
@@ -37,7 +37,7 @@ export interface StudentFilter {
 const studentApi = createApi({
     reducerPath: 'studentApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: backend_url + '/siswa',
+        baseUrl: Constant.manifest?.extra?.backend_url + '/siswa',
         prepareHeaders: (headers, { getState }) => {
             const { auth } = getState() as RootState
             headers.append('authorization', 'Bearer ' + auth.token)

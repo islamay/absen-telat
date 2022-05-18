@@ -6,8 +6,6 @@ import useInitialize from './src/hooks/useInitialize'
 import store from './src/redux/store'
 import { ActivityIndicator } from 'react-native-paper'
 import styleGuide from './src/constants/styleGuide'
-import { useAppSelector } from './src/hooks/redux'
-
 
 const App = () => {
   const initialized = useInitialize()

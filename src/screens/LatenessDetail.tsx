@@ -55,9 +55,6 @@ const LatenessDetail: React.FC<ScreenProps> = ({ navigation, route }) => {
         setPurpose(data?.alasan || Purposes.TidakAda)
     }, [data])
 
-    console.log(data?.alasan);
-
-
     return (
         <Clean scrollable={true}>
             <CleanHeader

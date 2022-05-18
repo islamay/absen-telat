@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { Picker } from '@react-native-picker/picker'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -18,11 +18,12 @@ import NotificationSnack from '../components/NotificationSnack'
 type ScreenProps = NativeStackScreenProps<TeacherStackParamList, 'TeacherDetail'>
 
 const TeacherDetail: React.FC<ScreenProps> = ({ route }) => {
-    const { data, isError, isSuccess, isLoading } = useGetTeacherByIdQuery(route.params.id)
+    const { data, isError, isSuccess, isLoading, error } = useGetTeacherByIdQuery(route.params.id)
     const [editedEmail, setEditedEmail] = useState('')
     const [editedRole, setEditedRole] = useState<TeacherRole>()
     const [editedStatus, setEditedStatus] = useState<AccountStatus>()
-    const [patch, { isLoading: isUpdateLoading, isSuccess: isUpdateSuccess }] = usePatchTeacherMutation()
+    const [patch, { isLoading: isUpdateLoading, isSuccess: isUpdateSuccess, isError: isUpdateError }] = usePatchTeacherMutation()
+    const [snackVisible, setSnackVisible] = useState(false)
 
     const rolePickers = useMemo(() => {
         return Object.values(TeacherRole).map(r => (
@@ -41,11 +42,19 @@ const TeacherDetail: React.FC<ScreenProps> = ({ route }) => {
         if (editedEmail) Object.assign(payload, { email: editedEmail })
         if (editedRole) Object.assign(payload, { role: editedRole })
         if (editedStatus) Object.assign(payload, { status: editedStatus })
-        console.log(payload);
-
 
         patch(payload)
     }, [editedEmail, editedRole, editedEmail])
+
+    const onSnackDismiss = () => {
+        setSnackVisible(false)
+    }
+
+    useEffect(() => {
+        if (isUpdateSuccess || isUpdateError) {
+            setSnackVisible(true)
+        }
+    }, [isUpdateSuccess, isUpdateError])
 
     return (
         <Clean>
@@ -59,7 +68,7 @@ const TeacherDetail: React.FC<ScreenProps> = ({ route }) => {
                     {
                         isLoading
                             ? <ActivityIndicator size={styleGuide.fontBig} color={styleGuide.colorGray} />
-                            : data
+                            : isSuccess
                                 ? <>
 
                                     <TextInput
@@ -110,6 +119,8 @@ const TeacherDetail: React.FC<ScreenProps> = ({ route }) => {
                 </View>
             </View>
             <NotificationSnack
+                onDismiss={onSnackDismiss}
+                visible={snackVisible}
                 isSuccess={isUpdateSuccess}
                 successMessage='Berhasil mengupdate'
                 errorMessage='Gagal mengupdate'

@@ -1,8 +1,8 @@
-import axios, { AxiosError } from 'axios'
-import { backend_url, ErrorResponse } from '../constants/api'
+import axios from 'axios'
+import Constant from 'expo-constants'
 
 const backendApi = axios.create({
-    baseURL: backend_url,
+    baseURL: Constant.manifest?.extra?.backend_url,
     timeout: 30000,
 
 })

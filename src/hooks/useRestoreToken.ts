@@ -5,7 +5,7 @@ import * as SecureStorage from 'expo-secure-store'
 import { Student } from '../services/student'
 import { Teacher } from '../services/teacher'
 import axios from 'axios'
-import { backend_url } from '../constants/api'
+import Constant from 'expo-constants'
 import * as Network from 'expo-network'
 
 const restoreTeacherData = async (): Promise<{ teacher: Teacher, token: string } | false> => {
@@ -16,7 +16,7 @@ const restoreTeacherData = async (): Promise<{ teacher: Teacher, token: string }
         const [savedData, token] = JSON.parse(result) as [Teacher, string]
         if (!savedData._id) return false
         if (isInternetReachable) {
-            const teacher = await axios.get<Teacher>(backend_url + '/guru/' + savedData._id, { headers: { authorization: 'Bearer ' + token } })
+            const teacher = await axios.get<Teacher>(Constant.manifest?.extra?.backend_url + '/guru/' + savedData._id, { headers: { authorization: 'Bearer ' + token } })
             return { teacher: teacher.data, token };
         }
         return { teacher: savedData, token }
@@ -33,7 +33,7 @@ const restoreStudentData = async (): Promise<{ student: Student, token: string }
         const [savedData, token] = JSON.parse(result) as [Student, string]
         if (!savedData.nis) return false
         if (isInternetReachable) {
-            const student = await axios.get<Student>(backend_url + '/siswa' + savedData.nis, { headers: { authorization: 'Bearer ' + token } })
+            const student = await axios.get<Student>(Constant.manifest?.extra?.backend_url + '/siswa' + savedData.nis, { headers: { authorization: 'Bearer ' + token } })
             return { student: student.data, token };
         }
         return { student: savedData, token }
@@ -65,7 +65,6 @@ const useRestoreToken = () => {
                     return done()
                 }
             } catch (error) {
-                console.log(error);
 
             }
 

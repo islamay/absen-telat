@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
-import { backend_url } from '../constants/api'
 import { useAppSelector } from './redux'
 import * as FileSystem from 'expo-file-system'
+import Constant from 'expo-constants'
 
 export const excelMimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
@@ -35,7 +35,7 @@ const useDownloadLatenessReport = () => {
         setInfo(prev => ({ ...prev, isLoading: true, isSuccess: false, isError: false }))
         try {
             const { uri } = await FileSystem.downloadAsync(
-                backend_url + `/keterlambatan/download?start=${start}&end=${end}`,
+                Constant.manifest?.extra?.backend_url + `/keterlambatan/download?start=${start}&end=${end}`,
                 FileSystem.documentDirectory + 'data-keterlambatan.xlsx',
                 { headers: { authorization: 'Bearer ' + auth.token } }
             )

@@ -40,11 +40,6 @@ const DatePicker: React.FC<Props> = ({ choose, year, month, week, date, setYear,
         }
     }
 
-    console.log('Choose : ', choose);
-    console.log(choose === 'week');
-
-
-
     return (
         <View>
             <View style={styles.pickerContainer}>
@@ -89,7 +84,7 @@ const DatePicker: React.FC<Props> = ({ choose, year, month, week, date, setYear,
                         {
                             [...Array(avaibleWeek)].map((v, i) => {
                                 const week = i + 1
-                                return <Picker.Item key={v} label={'Minggu ' + week} value={week} />
+                                return <Picker.Item key={i} label={'Minggu ' + week} value={week} />
                             })
                         }
                     </Picker>
@@ -105,7 +100,7 @@ const DatePicker: React.FC<Props> = ({ choose, year, month, week, date, setYear,
                         {
                             [...Array(avaibleDay)].map((v, i) => {
                                 const value = i + 1
-                                return <Picker.Item key={v} value={value} label={`${value}`} />
+                                return <Picker.Item key={i} value={value} label={`${value}`} />
                             })
                         }
                     </Picker>

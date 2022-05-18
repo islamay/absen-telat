@@ -64,9 +64,6 @@ const CustomDrawer: React.FC<Props> = (props) => {
         }
     }, [])
 
-    console.log(nestedDrawerVisible)
-
-
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -100,7 +97,7 @@ const CustomDrawer: React.FC<Props> = (props) => {
                     onPress={goTo.teacherData}
                     focused={isFocused('TeacherData')}
                 />
-                <CustomDrawerItem
+                {/* <CustomDrawerItem
                     icon={({ focused }) => {
                         return <FontAwesome name='bar-chart' size={styleGuide.fontBig} style={{ width: 32 }} color={styleGuide.colorGray} />
                     }}
@@ -135,7 +132,15 @@ const CustomDrawer: React.FC<Props> = (props) => {
                             />
                         </>
                     )
-                }
+                } */}
+                <CustomDrawerItem
+                    label='Keterlambatan'
+                    icon={({ focused }) => {
+                        return <FontAwesome name='bar-chart' size={styleGuide.fontBig} style={{ width: 32 }} color={focused ? styleGuide.colorTertiary : styleGuide.colorGray} />
+                    }}
+                    focused={isFocused('LatenessStatistic')}
+                    onPress={goTo.latenessStatistic}
+                />
                 <CustomDrawerItem
                     label='Akun'
                     onPress={goTo.profile}

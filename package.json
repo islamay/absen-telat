@@ -22,13 +22,15 @@
     "@reduxjs/toolkit": "^1.8.0",
     "@types/expo__vector-icons": "^10.0.0",
     "axios": "^0.26.0",
+    "dotenv": "^16.0.1",
     "expo": "~44.0.2",
     "expo-barcode-scanner": "~11.2.0",
+    "expo-camera": "~12.1.2",
     "expo-constants": "~13.0.1",
-    "expo-dev-client": "~0.8.4",
     "expo-file-system": "~13.1.4",
     "expo-font": "~10.0.4",
     "expo-intent-launcher": "~10.1.0",
+    "expo-network": "~4.1.0",
     "expo-secure-store": "~11.1.0",
     "expo-splash-screen": "~0.14.1",
     "expo-status-bar": "~1.2.0",
@@ -46,9 +48,7 @@
     "react-native-svg": "12.1.1",
     "react-native-web": "0.17.1",
     "react-redux": "^7.2.6",
-    "redux": "^4.1.2",
-    "expo-camera": "~12.1.2",
-    "expo-network": "~4.1.0"
+    "redux": "^4.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

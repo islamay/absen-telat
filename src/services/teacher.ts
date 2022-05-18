@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
 import { AccountStatus, EditableAccountStatus, TeacherRole } from '../constants/account'
-import { backend_url } from '../constants/api'
+import Constant from 'expo-constants'
 import { teacherAuthSuccess, teacherSignout } from '../redux/authAction'
 import { RootState } from '../redux/store'
 import * as SecureStorage from 'expo-secure-store'
@@ -17,7 +17,7 @@ export interface Teacher {
 const teacherApi = createApi({
     reducerPath: 'teacherApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: backend_url + '/guru',
+        baseUrl: Constant.manifest?.extra?.backend_url + '/guru',
         prepareHeaders: (headers, { getState }) => {
             const { auth: { token } } = getState() as RootState
             headers.set('authorization', 'Bearer ' + token)
