@@ -1,97 +1,120 @@
-import React, { useState, useContext } from 'react'
-import { View, Text, ScrollView, Alert } from 'react-native'
-import WithStatusBarMargin from '../components/WithStatusBarMargin'
-import Title from '../components/Title'
-import Card from '../components/Card'
-import Input from '../components/Input'
+import React, { useState } from 'react'
+import { View, Text, StyleSheet } from 'react-native'
+import Clean from '../layout/Clean'
+import Centerized from '../components/Centerized'
+import Typography from '../components/Typography'
+import TextInput from '../components/TextInput'
+import textInputHandler from '../utils/textInputHandler'
+import StyleGuide from '../constants/styleGuide'
 import Button from '../components/Button'
-import SemiSlashThrough from '../components/SemiSlashThrough'
-import CustomLink from '../components/CustomLink'
-import FormSecondaryCard from '../components/FormSecondaryCard'
-import styles from '../styles/Login'
-import { useDispatch } from 'react-redux'
-import { signUpSiswa } from '../store/thunks/authThunk'
+import { Link } from '@react-navigation/native'
+import { useAppDispatch, useAppSelector } from '../hooks/redux'
+import { studentSignUp } from '../redux/authThunk'
+import AuthModal from '../components/AuthModal'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { PublicStackParamList } from '../navigation/Public'
+import { useStudentSignUpMutation } from '../services/student'
 
-export const roleEnum = {
-    guru: 'GURU',
-    siswa: 'SISWA'
-}
+type ScreenProps = NativeStackScreenProps<PublicStackParamList>;
 
-const Login: React.FC = ({ navigation }) => {
-    const [NIS, setNIS] = useState('')
+const SignUp: React.FC<ScreenProps> = ({ navigation }) => {
+    const [nis, setNis] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [confirmationPassword, setConfirmationPassword] = useState('')
-    const [submitted, setSubmitted] = useState(false)
-    const dispatch = useDispatch()
+    const [passwordConfirmation, setPasswordConfirmation] = useState('')
+    const isInputValid = !!nis && !!email && !!password && !!passwordConfirmation && password === passwordConfirmation
+    const [signUp, { isError, isLoading, isSuccess }] = useStudentSignUpMutation()
+    const [errorMessage, setErrorMessage] = useState('')
 
-    const onNISChange = (v: string) => {
-        setNIS(v)
-    }
-
-    const onEmailChange = (v: string) => {
-        setEmail(v)
-    }
-
-    const onPasswordChange = (v: string) => {
-        setPassword(v)
-    }
-
-    const onPasswordConfirmationChange = (v: string) => {
-        setConfirmationPassword(v)
-    }
-
-    const createSignupErrorAlert = () => {
-        Alert.alert('Password Tidak Sesuai', 'Password dan Konfirmasi Password Tidak Sesuai', [
-            {
-                text: 'Ulangi'
+    const handleSignup = async () => {
+        try {
+            const signingUp = signUp({ nis, email, password }).unwrap()
+            await signingUp
+        } catch (error: any) {
+            if (error.status && error.data) {
+                setErrorMessage(error.data.message)
             }
-        ])
+            console.log(error);
+        }
     }
 
-    const onSignupButtonPressed = async () => {
-        dispatch(signUpSiswa({ nis: NIS, email, password }))
+    const goBackToLogin = () => {
+        navigation.navigate('StudentSignIn')
     }
 
     return (
-        <WithStatusBarMargin>
-            <ScrollView>
+        <Clean>
+            <Centerized>
                 <View style={styles.container}>
-                    <Title>Signup</Title>
-                    <Card style={styles.firstCard}>
-                        <Input
-                            placeholder={'NIS'}
-                            onChangeText={onNISChange}
-                        />
-
-                        <Input
-                            placeholder={'Email'}
-                            onChangeText={onEmailChange}
-                        />
-
-
-                        <Input
-                            hint={'Password Harus Memiliki Setidaknya 8 Huruf'}
-                            placeholder={'Password'}
-                            onChangeText={onPasswordChange}
-                            secureTextEntry={true}
-                        />
-                        <Input
-                            placeholder={'Konfirmasi Password'}
-                            onChangeText={onPasswordConfirmationChange}
-                            secureTextEntry={true}
-                        />
-                        <Button disabled={submitted} text={'Daftar'} style={styles.loginBtn} onPress={onSignupButtonPressed} />
-                    </Card>
-
-                    <FormSecondaryCard
-                        style={styles.secondCard}
-                        navigation={navigation}
+                    <AuthModal
+                        isLoading={isLoading}
+                        isError={isError}
+                        errorMessage={errorMessage}
+                        displaySuccess={true}
+                        errorTitle={'Gagal mendaftar'}
+                        isSuccess={isSuccess}
+                        successTitle={'berhasil mendaftar'}
+                        successMessage={'Berhasil membuat akun, hubungi admin untuk mengaktifakan'}
                     />
+                    <Typography type='title' style={styles.headerText}>Selamat Datang</Typography>
+                    <Typography style={styles.headerText}>Silahkan Daftar</Typography>
+                    <View style={styles.inputsContainer}>
+                        <TextInput
+                            mode='outlined'
+                            label='Nis'
+                            value={nis}
+                            onChangeText={textInputHandler(setNis)}
+                        />
+                        <TextInput
+                            mode='outlined'
+                            label='Email'
+                            value={email}
+                            onChangeText={textInputHandler(setEmail)}
+                        />
+                        <TextInput
+                            mode='outlined'
+                            label='Password'
+                            value={password}
+                            secureTextEntry={true}
+                            onChangeText={textInputHandler(setPassword)}
+                        />
+                        <TextInput
+                            mode='outlined'
+                            label='Konfirmasi Password'
+                            value={passwordConfirmation}
+                            secureTextEntry={true}
+                            onChangeText={textInputHandler(setPasswordConfirmation)}
+                        />
+                    </View>
+                    <Button disabled={!isInputValid} onPress={handleSignup} style={styles.signUpBotton}>Daftar</Button>
+                    <Typography style={styles.footerText}>Sudah memiliki akun?
+                        <Typography style={styles.footerLinkText} onPress={goBackToLogin}>&nbsp;Masuk</Typography>
+                    </Typography>
                 </View>
-            </ScrollView>
-        </WithStatusBarMargin>
+            </Centerized>
+        </Clean>
     )
 }
 
-export default Login
+const styles = StyleSheet.create({
+    container: {
+        paddingHorizontal: 50
+    },
+    headerText: {
+        textAlign: 'center'
+    },
+    inputsContainer: {
+        marginVertical: 50
+    },
+    signUpBotton: {
+        marginBottom: 50
+    },
+    footerText: {
+        textAlign: 'center'
+    },
+    footerLinkText: {
+        color: StyleGuide.colorTertiary
+    }
+})
+
+export default SignUp

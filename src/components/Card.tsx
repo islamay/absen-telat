@@ -1,21 +1,25 @@
 import React from 'react'
-import { View, StyleProp, ViewStyle } from 'react-native'
-import styles from '../styles/Card'
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native'
+import styleGuide from '../constants/styleGuide'
 
-interface CardProps {
-    width?: number,
-    height?: number,
+interface Props {
     style?: StyleProp<ViewStyle>
 }
 
-const Card: React.FC<CardProps> = ({ width, height, children, style }) => {
+const Card: React.FC<Props> = ({ children, style }) => {
 
     return (
-        <View style={[styles({ width, height }).container, style]}>
-            {children}
-        </View>
+        <View style={[styles.container, style]}>{children}</View>
     )
 }
 
-export default Card
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: styleGuide.colorWhite,
+        padding: 10,
+        borderRadius: 14,
+        ...styleGuide.shadow,
+    }
+})
 
+export default Card

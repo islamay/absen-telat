@@ -1,53 +1,74 @@
-import React, { useEffect, useState } from 'react'
-import { Text, View, StyleSheet } from 'react-native'
-import LightBlueScreen from '../components/LightBlueScreen'
+import React, { useMemo } from 'react'
+import { View, StyleSheet } from 'react-native'
+import Classic, { ClassicBodyHeader, ClassicBodyContents } from '../layout/Classic'
+import { FontAwesome } from '@expo/vector-icons'
+import styleGuide from '../constants/styleGuide'
+import Typography from '../components/Typography'
+import Card from '../components/Card'
 import QRCode from 'react-native-qrcode-svg'
-import VAR from '../styles/VAR'
-import { useSelector } from 'react-redux'
-import { RootState } from '../store/store'
+import TextInput, { textInputTheme } from '../components/TextInput'
+import { Theme } from 'react-native-paper/lib/typescript/types'
+import { useAppSelector } from '../hooks/redux'
 
-const StudentHome: React.FC = () => {
-    const user = useSelector((state: RootState) => state.user)
-    const [stringifyPayload, setStringifyPayload] = useState('')
-
-    useEffect(() => {
-        let payload: { nis: string, namaLengkap: string, kelas: string } | string = {
-            nis: user.nis,
-            namaLengkap: user.namaLengkap,
-            kelas: user.fullClass
-        }
-
-        payload = JSON.stringify(payload)
-        setStringifyPayload(payload)
-    }, [user])
+const StudentHome = () => {
+    const student = useAppSelector(state => state.student)
 
     return (
-        <LightBlueScreen>
-            <View style={styles.qrCodeContainer}>
-                {
-                    typeof stringifyPayload === 'string' && stringifyPayload.length !== 0
-                        ? <QRCode
-                            size={200}
-                            value={stringifyPayload}
-                        />
-                        : null
-                }
-
-            </View>
-        </LightBlueScreen>
+        <Classic
+            header={{
+                title: 'Beranda',
+                icon: <FontAwesome name="home" size={96} color={styleGuide.colorSecondary} />
+            }}
+        >
+            <ClassicBodyHeader>
+                <Typography type='title'>Kode QR</Typography>
+            </ClassicBodyHeader>
+            <ClassicBodyContents>
+                <Card style={styles.customCard}>
+                    <QRCode
+                        value={student.nis}
+                        size={160}
+                    />
+                </Card>
+                <View style={styles.identifierContainer}>
+                    <TextInput
+                        editable={false}
+                        mode='outlined'
+                        label='Nama'
+                        value={student.name}
+                        theme={customInputTheme}
+                    />
+                    <TextInput
+                        editable={false}
+                        mode='outlined'
+                        label='Kelas'
+                        value={student.fullClass}
+                        theme={customInputTheme}
+                    />
+                </View>
+            </ClassicBodyContents>
+        </Classic>
     )
 }
 
+const customInputTheme: Theme = {
+    ...textInputTheme,
+    colors: {
+        ...textInputTheme.colors,
+        text: styleGuide.colorTertiary,
+        primary: styleGuide.colorSecondary,
+        placeholder: styleGuide.colorSecondary
+    },
+}
+
 const styles = StyleSheet.create({
-    qrCodeContainer: {
+    customCard: {
         alignSelf: 'center',
-        marginBottom: 'auto',
-        marginTop: 'auto',
-        padding: 30,
-        backgroundColor: '#fff',
-        borderRadius: 15,
-        borderColor: VAR.outlineDefaultColor,
-        borderWidth: 1
+        padding: 20,
+        marginBottom: 20,
+    },
+    identifierContainer: {
+        paddingHorizontal: 20
     }
 })
 
