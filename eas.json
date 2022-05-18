@@ -4,7 +4,7 @@
   },
   "build": {
     "preview": {
-      "bundleType": "apk"
+      "buildType": "apk"
     },
     "production": {}
   },
